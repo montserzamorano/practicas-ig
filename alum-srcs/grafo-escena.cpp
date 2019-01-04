@@ -101,6 +101,12 @@ void NodoGrafoEscena::fijarColorNodo( const Tupla3f & nuevo_color )
   }
 }
 
+void NodoGrafoEscena::fijarColorHoja( const Tupla3f & nuevo_color ){
+  if(entradas[entradas.size()-1].tipo == TipoEntNGE::objeto){
+    entradas[entradas.size()-1].objeto->fijarColorNodo(nuevo_color);
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Añadir una entrada (al final).
 // genérica
@@ -231,14 +237,17 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   agregar(MAT_Escalado(0.5,0.5,0.5));
   Esfera * esf = new Esfera(100,100,true,true);
   agregar(esf);
+  fijarColorNodo(Tupla3f(1.0,0.8,0.0));
   agregar(MAT_Escalado(2.0,2.0,2.0));
   agregar(MAT_Traslacion(0.0,-0.5,0.0));
   ConoTruncado * ct = new ConoTruncado(1.0,0.5,5,100,false,true);
   agregar(ct);
+  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
   agregar(MAT_Traslacion(0.0,1.0,0.0));
   agregar(MAT_Escalado(0.5,1.0,0.5));
   Cilindro * cil = new Cilindro(5,100,true,true);
   agregar(cil);
+  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
   //agregamos el parámetro asociado
   string mensaje = "Rotación a los lados del cabezal del flexo.";
   p->push_back(Parametro(mensaje, entradas[1].matriz,
@@ -252,7 +261,6 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   p->push_back(Parametro(mensaje2, entradas[0].matriz,
                 [=](float v){return MAT_Traslacion(v,0.0,0.0);},
                 false, 0.0, 0.15, 0.03));
-  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
 }
 
 Lampara::Lampara(){

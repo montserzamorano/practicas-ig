@@ -79,6 +79,7 @@ class NodoGrafoEscena : public Objeto3D
    // visualiza usando OpenGL
    virtual void visualizarGL( ContextoVis & cv ) ;
    void fijarColorNodo( const Tupla3f & nuevo_color ) ;
+   void fijarColorHoja( const Tupla3f & nuevo_color ) ;
 
    // calcular y obtener la caja englobante
    //virtual CajaEngf cajaEnglobante() ;

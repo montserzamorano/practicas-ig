@@ -90,7 +90,7 @@ float Parametro::leer_velocidad_actual(){
 }
 // -----------------------------------------------------------------------------
 /*devuelve decripcion*/
-std::string Parametro::leer_descripcion(){
+string Parametro::leer_descripcion(){
   return descripcion;
 }
 

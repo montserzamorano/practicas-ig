@@ -75,7 +75,7 @@ bool P3_FGE_PulsarTeclaCaracter( unsigned char tecla )
       case 'G' :
          gradoLibertadActivo = (gradoLibertadActivo+1)%gradosLibertad;
          cout << "Grado de libertad activado: " << gradoLibertadActivo << endl;
-         cout << objetos3[0]->leer_descripcion() << endl;
+         cout << (objetos3[0]->leerPtrParametro(gradoLibertadActivo))->leer_descripcion()<< endl;
          break ;
 
       case 'R' :

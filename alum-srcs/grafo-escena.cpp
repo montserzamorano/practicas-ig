@@ -94,6 +94,7 @@ NodoGrafoEscena::NodoGrafoEscena(){}
 
 void NodoGrafoEscena::fijarColorNodo( const Tupla3f & nuevo_color )
 {
+  cout << "eyeye" << endl;
   for(int i=0; i<entradas.size();i++){
     if(entradas[i].tipo == TipoEntNGE::objeto){
       entradas[i].objeto->fijarColorNodo(nuevo_color);

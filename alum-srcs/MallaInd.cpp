@@ -102,9 +102,6 @@ void MallaInd::crearVBOs(){
   if( col_ver.size() > 0){
     id_vbo_col_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), col_ver.front());
   }
-  /*if( normales_vertices.size() > 0){
-    id_vbo_norm_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), normales_vertices.front());
-  }*/
 }
 
 // -----------------------------------------------------------------------------

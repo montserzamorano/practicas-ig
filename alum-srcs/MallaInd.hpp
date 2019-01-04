@@ -25,14 +25,13 @@ class MallaInd : public Objeto3D
       vector <Tupla3f> normales_vertices ;
       vector <Tupla3f> normales_caras ;
       vector <Tupla3f> col_ver ;
-      vector <Tupla3f> col_tri ;
-
+      //vector <Tupla3f> col_tri ;
       bool modoVBO = false ;
       GLuint id_vbo_ver ; //identificador del VBO con la tabla de vertices
       GLuint id_vbo_tri ; //identificador del VBO con la tabla de caras
       GLuint id_vbo_col_ver ; //identificador del VBO con la tabla de colores vertices
       GLuint id_vbo_norm_ver ;
-
+      //GLuint id_vbo_col_tri ; //identificador del VBO con la tabla de colores caras
 
 
       // calculo de las normales de esta malla
@@ -45,6 +44,7 @@ class MallaInd : public Objeto3D
       void visualizarDE_MI( ContextoVis & cv );
       // visualizar con 'draw elements', en modo diferido (con VBOS)
       void visualizarDE_VBOs( ContextoVis & cv );
+      void visualizarDE_VBOsAtrVer( ContextoVis & cv );
       void fijarColorNodo( const Tupla3f & nuevo_color );
 
    public:

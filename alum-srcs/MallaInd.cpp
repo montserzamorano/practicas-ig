@@ -102,14 +102,13 @@ void MallaInd::crearVBOs(){
   if( col_ver.size() > 0){
     id_vbo_col_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), col_ver.front());
   }
-  /*if( normales_vertices.size() > 0){
+  if( normales_vertices.size() > 0){
     id_vbo_norm_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), normales_vertices.front());
-  }*/
+  }
 }
 
 // -----------------------------------------------------------------------------
-//VISUALIZAR MODO INMEDIADO
-//drawElements
+//visualizar en modo inmediato usando glDrawElements
 void MallaInd::visualizarDE_MI( ContextoVis & cv )
 {
   GLenum modo;
@@ -127,11 +126,6 @@ void MallaInd::visualizarDE_MI( ContextoVis & cv )
       modo = GL_TRIANGLES;
   }
 
-  if(col_ver.size() > 0){
-    glEnableClientState( GL_COLOR_ARRAY );
-    glColorPointer( 3, GL_FLOAT, 0, col_ver.data() );
-  }
-
 	glLineWidth(2);	// grosor de línea
 	glPointSize(4);	// grosor de punto
   //vertices
@@ -140,10 +134,10 @@ void MallaInd::visualizarDE_MI( ContextoVis & cv )
 	// Visualizar recorriendo los vértices en el orden de los índices
 	glDrawElements( modo, caras.size()*3, GL_UNSIGNED_INT, caras.data());
 	glDisableClientState( GL_VERTEX_ARRAY ); // Deshabilitar array
-  glDisableClientState( GL_COLOR_ARRAY ) ;
 }
 // ----------------------------------------------------------------------------
-//VISUALIZAR MODO DIFERIDO (vertex buffer objects)
+//visualizar en modo diferido (vertex buffer objects)
+
 void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
   GLenum modo;
   ModosVis modovis = cv.modoVis;
@@ -164,33 +158,39 @@ void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
     crearVBOs();
     modoVBO = true;
   }
-
-  if(col_ver.size() > 0){
-    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_col_ver); //act. VBO col.v
-    glColorPointer(3, GL_FLOAT, 0, 0); //formato y offset de colores
-    glEnableClientState( GL_COLOR_ARRAY ); //activa uso de colores de v.
-  }
-
   glBindBuffer(GL_ARRAY_BUFFER, id_vbo_ver); //activar VBO usando su ident
   glVertexPointer( 3, GL_FLOAT, 0, 0); // Establecer dirección y offset
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glEnableClientState(GL_VERTEX_ARRAY); //usar tabla de vertices
 
   glLineWidth(2);	// grosor de línea
-  glPointSize(4);	// grosor de punto
+	glPointSize(4);	// grosor de punto
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri);
   glDrawElements( modo, caras.size()*3, GL_UNSIGNED_INT, nullptr);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDisableClientState(GL_VERTEX_ARRAY); //desactivar puntero a vertices
+}
 
+void MallaInd::visualizarDE_VBOsAtrVer( ContextoVis & cv ){
+  if(col_ver.size() > 0){
+    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_col_ver); //act. VBO col.v
+    glColorPointer(3, GL_FLOAT, 0, 0); //formato y offset de colores
+    glEnableClientState( GL_COLOR_ARRAY ); //activa uso de colores de v.
+  }
+  if(normales_vertices.size() > 0){
+    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_norm_ver ); //act. VBO norm.v
+    glColorPointer(3, GL_FLOAT, 0, 0); //formato y offset de normales
+    glEnableClientState( GL_NORMAL_ARRAY ); //activa uso de normales de v.
+  }
+  visualizarDE_VBOs(cv);
   glDisableClientState(GL_COLOR_ARRAY );
 }
 
 // -----------------------------------------------------------------------------
 void MallaInd::visualizarGL( ContextoVis & cv){
   if(cv.modoVBO){
-    visualizarDE_VBOs(cv);
+    visualizarDE_VBOsAtrVer(cv);
   }
   else{
     visualizarDE_MI(cv);

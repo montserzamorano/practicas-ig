@@ -202,14 +202,12 @@ Pelota::Pelota(vector <Parametro> *p){
   p->push_back(Parametro(mensaje, entradas[0].matriz,
               [=](float v){return MAT_Traslacion(0.0,v,0.0);},
               false, 0.5, 0.5, 0.1));
-  fijarColorNodo(Tupla3f(0.5,0.18,0.18));
 }
 
 Base::Base(vector <Parametro> *p){
   agregar(MAT_Escalado(1.5,0.5,1.5));
   Cilindro * cil = new Cilindro(5,100,true,true);
   agregar(cil);
-  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
 }
 
 Barra::Barra(vector <Parametro> *p){
@@ -217,7 +215,6 @@ Barra::Barra(vector <Parametro> *p){
   agregar(MAT_Escalado(0.2,3.0,0.2));
   Cilindro * cil = new Cilindro(5,100,true,true);
   agregar(cil);
-  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
 }
 
 LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
@@ -252,7 +249,6 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   p->push_back(Parametro(mensaje2, entradas[0].matriz,
                 [=](float v){return MAT_Traslacion(v,0.0,0.0);},
                 false, 0.0, 0.15, 0.03));
-  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
 }
 
 Lampara::Lampara(){

@@ -75,7 +75,7 @@ void Parametro::decelerar(){
 /*devuelve el valor actual (valor de q)*/
 float Parametro::leer_valor_actual(){
   float valor_actual;
-  if(acotado){
+  if(!acotado){
     valor_actual = c + s*valor_norm; //crece indefinidamente
   }
   else{

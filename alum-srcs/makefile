@@ -12,11 +12,13 @@
 # Objeto3D, MallaInd, practica2, MallaRevol, MallaPLY, practica3, etc......
 # (para cada nombre habrá un archivo .cpp en 'alum-src')
 
+#ColeccionFL FuenteLuz Material MaterialConcreto Textura
+
 units_alu := main cauce\
              practica1 Objeto3D MallaInd\
              practica2 MallaRevol MallaPLY\
              practica3 Parametro grafo-escena\
-             practica4 materiales\
+             practica4 materiales \
              practica5 Camara CamaraInter
 
 ## ---------------------------------------------------------------------

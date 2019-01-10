@@ -200,14 +200,14 @@ void NodoGrafoEscenaParam::siguienteCuadro(){
 ////////////////////////////////////////////////////////////////////////////
 Pelota::Pelota(vector <Parametro> *p){
   agregar(MAT_Rotacion(0.0,0.0,1.0,0.0));
-  agregar(MAT_Traslacion(-2.5,0.5,0.0));
+  agregar(MAT_Traslacion(-2.5,1.0,0.0));
   agregar(MAT_Escalado(0.5,0.5,0.5));
   Esfera * esf = new Esfera(100,100,true,true);
   agregar(esf);
   string mensaje = "Movimiento de la pelota: Botar.";
   p->push_back(Parametro(mensaje, entradas[0].matriz,
               [=](float v){return MAT_Traslacion(0.0,v,0.0);},
-              false, 0.5, 0.5, 0.1));
+              true, 0.0, 0.5, 0.1));
   fijarColorNodo(Tupla3f(0.5,0.18,0.18));
 }
 
@@ -252,15 +252,15 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   string mensaje = "Rotación a los lados del cabezal del flexo.";
   p->push_back(Parametro(mensaje, entradas[1].matriz,
               [=](float v){return MAT_Rotacion(v,0.0,1.0,0.0);},
-              true, 0.0, 15.0, 0.5));
+              false, 0.0, 15.0, 0.5));
   string mensaje2 = "Rotación arriba-abajo del cabezal del flexo.";
   p->push_back(Parametro(mensaje2, entradas[3].matriz,
               [=](float v){return MAT_Rotacion(v,0.0,0.0,1.0);},
-              false, 0.0, 20.0, 0.2));
+              true, 0.0, 20.0, 0.2));
   string mensaje3 = "Desplazamiento lateral del cabezal del flexo.";
-  p->push_back(Parametro(mensaje2, entradas[0].matriz,
+  p->push_back(Parametro(mensaje3, entradas[0].matriz,
                 [=](float v){return MAT_Traslacion(v,0.0,0.0);},
-                false, 0.0, 0.15, 0.03));
+                true, 0.0, 0.15, 0.03));
 }
 
 Lampara::Lampara(){

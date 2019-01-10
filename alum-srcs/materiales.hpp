@@ -29,7 +29,6 @@
 #include "tuplasg.hpp"
 #include "jpg_imagen.hpp"
 
-
 // *********************************************************************
 // algunes declaraciones auxiliares importantes
 
@@ -40,8 +39,7 @@ typedef Tupla4f VectorRGB ;
 // *********************************************************************
 // clase para una pila de materiales
 
-class PilaMateriales
-{
+class PilaMateriales{
    private:
 
    Material *              actual ;
@@ -56,6 +54,8 @@ class PilaMateriales
    void push();
    void pop();
 } ;
+
+#include "practicas.hpp"   // declaración de 'ContextoVis'
 
 //**********************************************************************
 // posibles modos de generacion de coords. de textura
@@ -191,6 +191,51 @@ class Material
       del,           // reflectividades de caras delanteras, si iluminacion= true
       tra ;          // reflectividades de caras traseras, si iluminacion=true
 } ;
+
+////////////////////// MATERIAL ESTANDAR /////////////////////////////////
+class MaterialEstandar : public Material {
+  public:
+    Textura * textura ; //punt. a textura (NULL si no hay)
+    Tupla4f color[4] ; //0=Me; 1=Ma; 2=Md; 3=Ms
+    float exponente; //exponente (e)
+
+    //virtual void activar(ContextoVis & cv); //activa material
+};
+////////////////////// MATERIAL CONCRETO /////////////////////////////////
+//tipo de material lata con textura de coca-cola
+
+class MaterialLata : public MaterialEstandar{
+  public:
+    MaterialLata();
+};
+
+//tipo de material: ninguno
+
+class MaterialTapasLata : public MaterialEstandar{
+  public:
+    MaterialTapasLata();
+};
+
+//tipo de material peon con textura de madera
+
+class MaterialPeonMadera : public MaterialEstandar{
+  public:
+    MaterialPeonMadera();
+};
+
+//tipo de material: ninguno
+
+class MaterialPeonBlanco : public MaterialEstandar{
+  public:
+    MaterialPeonBlanco();
+};
+
+//tipo de material: ninguno
+
+class MaterialPeonNegro : public MaterialEstandar{
+  public:
+    MaterialPeonNegro();
+};
 
 //**********************************************************************
 // Clase FuenteLuz

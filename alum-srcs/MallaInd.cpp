@@ -9,7 +9,7 @@
 #include <aux.hpp>
 #include <tuplasg.hpp>
 //#include <tuplasg_impl.hpp>
-#include "MallaInd.hpp"   // declaración de 'ContextoVis'
+#include "MallaInd.hpp"
 
 // *****************************************************************************
 // funciones auxiliares
@@ -97,68 +97,105 @@ GLuint MallaInd::VBO_Crear(GLuint tipo, GLuint tamanio, GLvoid * puntero){
 
 void MallaInd::crearVBOs(){
   //crear VBO conteniendo la tabla de vértices
-  id_vbo_ver = VBO_Crear(GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), vertices.front());
-  id_vbo_tri = VBO_Crear(GL_ELEMENT_ARRAY_BUFFER, 3*sizeof(int)*caras.size(),caras.front());
+  id_vbo_ver = VBO_Crear(GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), vertices.data());
+  //crear VBO conteniendo la tabla de caras
+  id_vbo_tri = VBO_Crear(GL_ELEMENT_ARRAY_BUFFER, 3*sizeof(int)*caras.size(),caras.data());
+  //si hay tabla de colores, crear VBO conteniendo la tabla de colores
   if( col_ver.size() > 0){
-    id_vbo_col_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), col_ver.front());
+    id_vbo_col_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), col_ver.data());
   }
-  /*if( normales_vertices.size() > 0){
-    id_vbo_norm_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), normales_vertices.front());
-  }*/
+  //si hay tabla de normales, crear VBO
+  if( normales_vertices.size() > 0){
+    id_vbo_norm_ver = VBO_Crear( GL_ARRAY_BUFFER, 3*sizeof(float)*vertices.size(), normales_vertices.data());
+  }
+  //si hay tabla de texturas, crear VBO
+  if( cctt.size() > 0){
+    id_vbo_cctt = VBO_Crear( GL_ARRAY_BUFFER, tam_cctt, cctt.data());
+  }
 }
 
 // -----------------------------------------------------------------------------
+
+void MallaInd::visualizarDE_NT(){//visualizacion con normales y textura
+  glVertexPointer(3, GL_FLOAT, 0, vertices.data());
+  glTexCoordPointer(2, GL_FLOAT, 0, cctt.data());
+  glNormalPointer( GL_FLOAT, 0, normales_vertices.data());
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_NORMAL_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+  glDrawElements(GL_TRIANGLES, caras.size(), GL_UNSIGNED_INT, caras.data());
+
+  glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void MallaInd::setPolygonMode(ContextoVis & cv){
+  ModosVis modovis = cv.modoVis;
+
+  if(modovis == modoPuntos){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+  }
+  else if(modovis == modoAlambre){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  }
+  else if(modovis == modoSolido){
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  }
+}
+
 //VISUALIZAR MODO INMEDIADO
+void MallaInd::visualizarDE(){
+  //vertices
+  glEnableClientState( GL_VERTEX_ARRAY ); // Habilitar array de vértices
+  glVertexPointer( 3, GL_FLOAT, 0, vertices.data()); // Establecer dirección y estructura
+  // Visualizar recorriendo los vértices en el orden de los índices
+  glDrawElements( GL_TRIANGLES, caras.size()*3, GL_UNSIGNED_INT, caras.data());
+  glDisableClientState( GL_VERTEX_ARRAY ); // Deshabilitar array
+}
 //drawElements
 void MallaInd::visualizarDE_MI( ContextoVis & cv )
 {
-  GLenum modo;
-	ModosVis modovis = cv.modoVis;
-
-	if(modovis == modoPuntos){
-			modo = GL_POINTS;
-  }
-	else if(modovis == modoAlambre){
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      modo = GL_TRIANGLES;
-  }
-	else if(modovis == modoSolido){
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      modo = GL_TRIANGLES;
-  }
+  setPolygonMode(cv);
 
   if(col_ver.size() > 0){
     glEnableClientState( GL_COLOR_ARRAY );
     glColorPointer( 3, GL_FLOAT, 0, col_ver.data() );
   }
 
+  if(normales_vertices.size() > 0){
+    glEnableClientState( GL_NORMAL_ARRAY );
+    glNormalPointer( GL_FLOAT, 0, normales_vertices.data() );
+  }
+
 	glLineWidth(2);	// grosor de línea
 	glPointSize(4);	// grosor de punto
-  //vertices
-	glEnableClientState( GL_VERTEX_ARRAY ); // Habilitar array de vértices
-	glVertexPointer( 3, GL_FLOAT, 0, vertices.data()); // Establecer dirección y estructura
-	// Visualizar recorriendo los vértices en el orden de los índices
-	glDrawElements( modo, caras.size()*3, GL_UNSIGNED_INT, caras.data());
-	glDisableClientState( GL_VERTEX_ARRAY ); // Deshabilitar array
+
+  visualizarDE();
+
+  glDisableClientState( GL_NORMAL_ARRAY );
   glDisableClientState( GL_COLOR_ARRAY ) ;
 }
 // ----------------------------------------------------------------------------
 //VISUALIZAR MODO DIFERIDO (vertex buffer objects)
-void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
-  GLenum modo;
-  ModosVis modovis = cv.modoVis;
+void MallaInd::visualizarVBOs(){
+  glBindBuffer(GL_ARRAY_BUFFER, id_vbo_ver); //activar VBO usando su ident
+  glVertexPointer( 3, GL_FLOAT, 0, 0); // Establecer dirección y offset
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glEnableClientState(GL_VERTEX_ARRAY); //usar tabla de vertices
 
-  if(modovis == modoPuntos){
-      modo = GL_POINTS;
-  }
-  else if(modovis == modoAlambre){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      modo = GL_TRIANGLES;
-  }
-  else if(modovis == modoSolido){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      modo = GL_TRIANGLES;
-  }
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri);
+  glDrawElements( GL_TRIANGLES, caras.size()*3, GL_UNSIGNED_INT, nullptr);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glDisableClientState(GL_VERTEX_ARRAY); //desactivar puntero a vertices
+}
+
+void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
+  setPolygonMode(cv);
+  glLineWidth(2);	// grosor de línea
+  glPointSize(4);	// grosor de punto
 
   if(!modoVBO){
     crearVBOs();
@@ -171,20 +208,35 @@ void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
     glEnableClientState( GL_COLOR_ARRAY ); //activa uso de colores de v.
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, id_vbo_ver); //activar VBO usando su ident
-  glVertexPointer( 3, GL_FLOAT, 0, 0); // Establecer dirección y offset
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glEnableClientState(GL_VERTEX_ARRAY); //usar tabla de vertices
+  if(normales_vertices.size() > 0){
+    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_norm_ver); //act. VBO normales .v
+    glNormalPointer(GL_FLOAT, 0, 0); //formato y offset de normales
+    glEnableClientState( GL_NORMAL_ARRAY ); //activa uso de normales de v.
+  }
 
-  glLineWidth(2);	// grosor de línea
-  glPointSize(4);	// grosor de punto
+  visualizarVBOs();
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri);
-  glDrawElements( modo, caras.size()*3, GL_UNSIGNED_INT, nullptr);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  glDisableClientState(GL_VERTEX_ARRAY); //desactivar puntero a vertices
-
+  glDisableClientState(GL_NORMAL_ARRAY);
   glDisableClientState(GL_COLOR_ARRAY );
+}
+
+void MallaInd::visualizarVBOs_NT(){
+  tam_cctt = sizeof(float)*2L*num_ver;
+
+  if(!modoVBO){
+    crearVBOs();
+    modoVBO = true;
+  }
+  //activar VBO de coordenadas
+  glBindBuffer(GL_ARRAY_BUFFER, id_vbo_norm_ver);
+  glNormalPointer(GL_FLOAT, 0, 0);
+  glEnableClientState(GL_NORMAL_ARRAY);
+  //activar VBO de coordenadas de textura
+  glBindBuffer(GL_ARRAY_BUFFER, id_vbo_cctt);
+  glTexCoordPointer(2, GL_FLOAT, 0,0);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+  //visualizar
+
 }
 
 // -----------------------------------------------------------------------------

@@ -229,6 +229,18 @@ void Material::activar(  )
 
 }
 
+//MATERIAL CONCRETO
+
+MaterialLata::MaterialLata(){}
+
+MaterialTapasLata::MaterialTapasLata(){}
+
+MaterialPeonMadera::MaterialPeonMadera(){}
+
+MaterialPeonBlanco::MaterialPeonBlanco(){}
+
+MaterialPeonNegro::MaterialPeonNegro(){}
+
 //**********************************************************************
 
 FuenteLuz::FuenteLuz( GLfloat p_longi_ini, GLfloat p_lati_ini, const VectorRGB & p_color )

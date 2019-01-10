@@ -19,7 +19,6 @@
 
 class ColFuentesLuz ;
 
-
 // ---------------------------------------------------------------------
 // tipo de datos enumerado para los modos de visualización:
 

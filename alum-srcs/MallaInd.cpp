@@ -116,6 +116,11 @@ void MallaInd::crearVBOs(){
 
 // -----------------------------------------------------------------------------
 
+void MallaInd::setLineasPuntos(float grosorL, float grosorP){
+  glLineWidth(grosorL);	// grosor de línea
+  glPointSize(grosorP);	// grosor de punto
+}
+
 void MallaInd::visualizarDE_NT(){//visualizacion con normales y textura
   glVertexPointer(3, GL_FLOAT, 0, vertices.data());
   glTexCoordPointer(2, GL_FLOAT, 0, cctt.data());
@@ -159,6 +164,7 @@ void MallaInd::visualizarDE(){
 void MallaInd::visualizarDE_MI( ContextoVis & cv )
 {
   setPolygonMode(cv);
+  setLineasPuntos(2,4);
 
   if(col_ver.size() > 0){
     glEnableClientState( GL_COLOR_ARRAY );
@@ -169,9 +175,6 @@ void MallaInd::visualizarDE_MI( ContextoVis & cv )
     glEnableClientState( GL_NORMAL_ARRAY );
     glNormalPointer( GL_FLOAT, 0, normales_vertices.data() );
   }
-
-	glLineWidth(2);	// grosor de línea
-	glPointSize(4);	// grosor de punto
 
   visualizarDE();
 
@@ -194,8 +197,7 @@ void MallaInd::visualizarVBOs(){
 
 void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
   setPolygonMode(cv);
-  glLineWidth(2);	// grosor de línea
-  glPointSize(4);	// grosor de punto
+  setLineasPuntos(2,4);
 
   if(!modoVBO){
     crearVBOs();

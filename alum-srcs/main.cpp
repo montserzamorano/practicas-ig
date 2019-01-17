@@ -278,7 +278,6 @@ void FGE_PulsarTeclaCaracter( GLFWwindow* window, unsigned int codepoint )
          break;
       case 'M' :
          //contextoVis.modoVis = ModosVis((int(contextoVis.modoVis)+1) % numModosVis) ;
-         //esto es para evitar que en la practica 1 se pinten modos que no existen
          contextoVis.modoVis = ModosVis((int(contextoVis.modoVis)+1) % 3) ;
          cout << "modo de visualización cambiado a: '" << nombreModo[contextoVis.modoVis] << "'" << endl << flush ;
          break ;
@@ -305,10 +304,10 @@ void FGE_PulsarTeclaCaracter( GLFWwindow* window, unsigned int codepoint )
             case 3 :
                redibujar = P3_FGE_PulsarTeclaCaracter( tecla ) ; // true si es necesario redibujar
                break ;
-            /*case 4 :
+            case 4 :
                redibujar = P4_FGE_PulsarTeclaCaracter( tecla ) ; // true si es necesario redibujar
                break ;
-            case 5 :
+            /*case 5 :
                redibujar = P5_FGE_PulsarTeclaCaracter( tecla ) ; // true si es necesario redibujar
                break ;*/
             default :

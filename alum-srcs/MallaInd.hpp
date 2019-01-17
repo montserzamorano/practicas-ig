@@ -75,6 +75,10 @@ class MallaInd : public Objeto3D
 
       // colores
       void fijarColorNodo( const Tupla3f & nuevo_color );
+      //setters
+      void setVertices(vector <Tupla3f> v);
+      void setCaras(vector <Tupla3i> c);
+      void setLineasPuntos(float grosorL, float grosorP);
 
    public:
       // crea una malla vacía (nombre: "malla indexada nueva vacía")
@@ -83,9 +87,6 @@ class MallaInd : public Objeto3D
       MallaInd( const string & nombreIni );
       // visualizar el objeto con OpenGL
       virtual void visualizarGL( ContextoVis & cv) ;
-
-      void setVertices(vector <Tupla3f> v);
-      void setCaras(vector <Tupla3i> c);
 
 } ;
 // ---------------------------------------------------------------------

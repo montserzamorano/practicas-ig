@@ -67,8 +67,6 @@ typedef enum
 }
    ModoGenCT ;
 
-
-
 // *********************************************************************
 // Estructura ColoresMat
 // ---------------------
@@ -199,7 +197,7 @@ class MaterialEstandar : public Material {
     Tupla4f color[4] ; //0=Me; 1=Ma; 2=Md; 3=Ms
     float exponente; //exponente (e)
 
-    //virtual void activar(ContextoVis & cv); //activa material
+    virtual void activar(ContextoVis & cv); //activa material
 };
 ////////////////////// MATERIAL CONCRETO /////////////////////////////////
 //tipo de material lata con textura de coca-cola
@@ -270,6 +268,8 @@ public:
       longi,      // longitud actual de la fuente direccional (en grados, entre 0 y 360)
       lati ;      // latitud actual de la fuente direccional (en grados, entre -90 y 90)
 protected:
+   Tupla4f color[3], posicion ;
+
    VectorRGB
       col_ambiente,  // color de la fuente para la componente ambiental
       col_difuso,    // color de la fuente para la componente difusa
@@ -282,6 +282,20 @@ protected:
 
    friend class ColFuentesLuz ;
 } ;
+
+class FuenteDireccional : public FuenteLuz{
+  public:
+    //inicializar la fuente de luz
+    FuenteDireccional(float alpha_inicial, float beta_inicial) ;
+    //cambiar angulo
+    //angulo==0->variar alpha, angulo==1->variar beta
+    void variarAngulo(unsigned angulo, float incremento) ;
+};
+
+class FuentePosicional : public FuenteLuz{
+  public:
+    FuentePosicional( const Tupla3f & posicion );
+};
 
 //**********************************************************************
 // Clase ConjuntoFuentes
@@ -301,4 +315,9 @@ class ColFuentesLuz
    std::vector<FuenteLuz *> vpf ; // vector de punteros a fuentes
    GLint max_num_fuentes ;
 } ;
+
+class ColeccionFuenteP4 : public ColeccionFL{
+  public:
+    ColeccionFuentesP4();
+}
 #endif

@@ -14,8 +14,8 @@
 
 using namespace std ;
 
-// COMPLETAR: práctica 4: declaración de variables de la práctica 4 (static)
-// ....
+static Objeto3D* objetoActivo4 = nullptr ;
+static float anguloActual = 0.0 ;
 
 
 // ---------------------------------------------------------------------
@@ -49,21 +49,33 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
    switch ( toupper( tecla ) )
    {
       case 'G' :
-         // COMPLETAR: práctica 4: activar el siguiente ángulo (longitud o latitud)
-         // ....
-
+         // conmutar entre el angulo alpha y el angulo beta
+         if(anguloActual==0){
+           anguloActual=1;
+         }
+         else{
+           anguloActual=0;
+         }
          break ;
 
       case '>' :
-         // COMPLETAR: práctica 4: incrementar el ángulo activo
-         // ....
-
+         cout << "Aumentar el ángulo activo." << endl;
+         if(anguloActual==0){ //si alpha
+           objetoActivo4->aumentarAlpha();
+         }
+         else{ //si beta
+           objetoActivo4->aumentarBeta();
+         }
          break ;
 
       case '<' :
-         // COMPLETAR: práctica 4: decrementar el ángulo activo
-         // ....
-
+         cout << "Decrementar el ángulo activo." << endl;
+         if(anguloActual==0){ //si alpha
+           objetoActivo4->decrementarAlpha();
+         }
+         else{ //si beta
+           objetoActivo4->decrementarBeta();
+         }
          break ;
       default :
          break ;
@@ -79,8 +91,7 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
 
 void P4_DibujarObjetos( ContextoVis & cv )
 {
-   // COMPLETAR: práctica 4: visualizar objetos
-   //     (requiere activar las fuentes de luz y luego dibujar el grafo de escena)
-   // ....
-
+  glEnable(GL_LIGHTING);
+  objetoActivo4->visualizarGL();
+  glDisable(GL_LIGHTING);
 }

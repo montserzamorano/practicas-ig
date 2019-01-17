@@ -75,15 +75,20 @@ void NodoGrafoEscena::visualizarGL( ContextoVis & cv )
 {
    glMatrixMode(GL_MODELVIEW); //operamos sobre la modelview
    glPushMatrix() ; //guarda el modelview actual
+   cv.pilaMateriales.push();
    for (unsigned i=0; i<entradas.size(); i++){
      if(entradas[i].tipo == TipoEntNGE::objeto){//si la entrada es sub-objeto
        entradas[i].objeto->visualizarGL(cv); //visualizarlo
+     }
+     else if(entradas[i].tipo == TipoEntNGE::material){
+       cv.pilaMateriales.activarMaterial(entradas[i].material);
      }
      else{
        glMatrixMode(GL_MODELVIEW); //modomodelview
        glMultMatrixf(*(entradas[i].matriz)); //componerla
      }
    }
+   cv.pilaMateriales.pop();
    glMatrixMode(GL_MODELVIEW); //operamos sobre la modelview
    glPopMatrix(); //restaura modelview guardada
 }

@@ -41,6 +41,8 @@ const std::string nombreModo[numModosVis] =
       "modoAlambre",
       "modoSolido",
 
+      //"modoIluminacionPlano",
+      //"modoGoroud",
       "modoColorNodoPlano",
       "modoMateriales"
    } ;

@@ -2,7 +2,7 @@
 // **
 // ** Informática Gráfica, curso 2018-19
 // ** Montserrat Rodríguez Zamorano
-// ** Práctica 2  (implementación)
+// ** Práctica 3  (implementación)
 // **
 // *********************************************************************
 

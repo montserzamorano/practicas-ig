@@ -41,7 +41,7 @@ using namespace std ;
 // *********************************************************************
 
 constexpr int
-   numPracticas      = 3 ;       // número total de prácticas
+   numPracticas      = 4 ;       // número total de prácticas
 int
    ventana_tam_x     = 1024,     // ancho inicial y actual de la ventana, en pixels
    ventana_tam_y     = 1024,     // alto inicial actual de la ventana, en pixels
@@ -69,6 +69,7 @@ GLFWwindow *
    glfw_window       = nullptr ; // puntero a la ventana GLFW
 ContextoVis
    contextoVis ;                 // contexto de visualización actual (incluye modo de visualización)
+//ShaderProg * shaders;
 // puntero a función que se ejecuta cuando no hay eventos pendientes
 // (si es null no se hace nada)
 void (*func_desocupado_actual)(void) = nullptr ;
@@ -190,8 +191,8 @@ void VisualizarFrame()
    // hacer que la ventana GLFW sea la ventana actual
    glfwMakeContextCurrent( glfw_window );
 
-
-
+   /*if (contextoVis.usarShader)
+      shaders->activar();*/
 
    DibujarEscena();  // ordenes OpenGL para dibujar la escena correspondiente a la práctica actual
 
@@ -265,7 +266,6 @@ void FGE_PulsarTeclaCaracter( GLFWwindow* window, unsigned int codepoint )
          break ;
       case 'P' :
          practicaActual = (practicaActual % numPracticas) +1 ;
-         //practicaActual = (practicaActual % 2) +1 ;
          cout << "Práctica actual cambiada a: " << practicaActual << endl << flush ;
          if ( practicaActual == 3 )
             FijarFuncDesocupado( FGE_Desocupado );
@@ -277,8 +277,7 @@ void FGE_PulsarTeclaCaracter( GLFWwindow* window, unsigned int codepoint )
          cam_d = cam_d_min + (cam_d-cam_d_min)*(1.0+cam_d_incre_scroll) ;
          break;
       case 'M' :
-         //contextoVis.modoVis = ModosVis((int(contextoVis.modoVis)+1) % numModosVis) ;
-         contextoVis.modoVis = ModosVis((int(contextoVis.modoVis)+1) % 3) ;
+         contextoVis.modoVis = ModosVis((int(contextoVis.modoVis)+1) % numModosVis) ;
          cout << "modo de visualización cambiado a: '" << nombreModo[contextoVis.modoVis] << "'" << endl << flush ;
          break ;
       case 'V':
@@ -649,8 +648,7 @@ void Inicializa_OpenGL( )
 
    Inicializa_GLEW();
 
-
-
+   //shaders = new SimpleSP;
 
    // ya está
    CError();
@@ -680,7 +678,7 @@ void Inicializar( int argc, char *argv[] )
    P3_Inicializar(  );
 
    // inicializar la práctica 4
-   //P4_Inicializar(  );
+   P4_Inicializar(  );
 
    // inicializar la práctica 5
    //P5_Inicializar( ventana_tam_x, ventana_tam_y );

@@ -2,7 +2,7 @@
 // **
 // ** Informática Gráfica, curso 2018-19
 // ** Montserrat Rodríguez Zamorano
-// ** Práctica 2  (implementación)
+// ** Práctica 4  (implementación)
 // **
 // *********************************************************************
 
@@ -10,6 +10,7 @@
 #include "tuplasg.hpp"   // Tupla3f
 #include "practicas.hpp"
 #include "practica3.hpp"
+#include "grafo-escena.hpp"
 
 
 using namespace std ;
@@ -27,8 +28,7 @@ void P4_Inicializar(  )
 {
    cout << "Creando objetos de la práctica 4 .... " << flush ;
 
-   // COMPLETAR: práctica 4: inicializar objetos de la práctica 4
-   // ....
+   objetoActivo4 = new EscenaObjetosLuces();
 
    cout << "hecho." << endl << flush ;
 }
@@ -61,20 +61,20 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
       case '>' :
          cout << "Aumentar el ángulo activo." << endl;
          if(anguloActual==0){ //si alpha
-           objetoActivo4->aumentarAlpha();
+           //objetoActivo4->aumentarAlpha();
          }
          else{ //si beta
-           objetoActivo4->aumentarBeta();
+           //objetoActivo4->aumentarBeta();
          }
          break ;
 
       case '<' :
          cout << "Decrementar el ángulo activo." << endl;
          if(anguloActual==0){ //si alpha
-           objetoActivo4->decrementarAlpha();
+           //objetoActivo4->decrementarAlpha();
          }
          else{ //si beta
-           objetoActivo4->decrementarBeta();
+           //objetoActivo4->decrementarBeta();
          }
          break ;
       default :
@@ -92,6 +92,6 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
 void P4_DibujarObjetos( ContextoVis & cv )
 {
   glEnable(GL_LIGHTING);
-  objetoActivo4->visualizarGL();
+  objetoActivo4->visualizarGL(cv);
   glDisable(GL_LIGHTING);
 }

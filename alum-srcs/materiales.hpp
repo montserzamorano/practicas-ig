@@ -197,40 +197,42 @@ class MaterialEstandar : public Material {
     Tupla4f color[4] ; //0=Me; 1=Ma; 2=Md; 3=Ms
     float exponente; //exponente (e)
 
-    virtual void activar(ContextoVis & cv); //activa material
+    MaterialEstandar();
+
+    //virtual void activar(ContextoVis & cv); //activa material
 };
 ////////////////////// MATERIAL CONCRETO /////////////////////////////////
 //tipo de material lata con textura de coca-cola
 
-class MaterialLata : public MaterialEstandar{
+class MaterialLata : public Material{
   public:
     MaterialLata();
 };
 
 //tipo de material: ninguno
 
-class MaterialTapasLata : public MaterialEstandar{
+class MaterialTapasLata : public Material{
   public:
     MaterialTapasLata();
 };
 
 //tipo de material peon con textura de madera
 
-class MaterialPeonMadera : public MaterialEstandar{
+class MaterialPeonMadera : public Material{
   public:
     MaterialPeonMadera();
 };
 
 //tipo de material: ninguno
 
-class MaterialPeonBlanco : public MaterialEstandar{
+class MaterialPeonBlanco : public Material{
   public:
     MaterialPeonBlanco();
 };
 
 //tipo de material: ninguno
 
-class MaterialPeonNegro : public MaterialEstandar{
+class MaterialPeonNegro : public Material{
   public:
     MaterialPeonNegro();
 };
@@ -254,6 +256,8 @@ class FuenteLuz
    // cambia el estado de OpenGL de forma que a partir de la llamada
    // se usará esta fuente de luz en los calculos del MIL
    // (en cada momento puede haber varias fuentes activadas)
+
+   //lo hacemos virtual porque los definiremos en las subclases
    void activar() ;
 
    // cambia los atributos de la instancia en respuesta a una pulsación
@@ -268,7 +272,7 @@ public:
       longi,      // longitud actual de la fuente direccional (en grados, entre 0 y 360)
       lati ;      // latitud actual de la fuente direccional (en grados, entre -90 y 90)
 protected:
-   Tupla4f color[3], posicion ;
+   Tupla4f posicion ;
 
    VectorRGB
       col_ambiente,  // color de la fuente para la componente ambiental
@@ -286,7 +290,7 @@ protected:
 class FuenteDireccional : public FuenteLuz{
   public:
     //inicializar la fuente de luz
-    FuenteDireccional(float alpha_inicial, float beta_inicial) ;
+    FuenteDireccional(float alpha_inicial, float beta_inicial, const VectorRGB & p_color) ;
     //cambiar angulo
     //angulo==0->variar alpha, angulo==1->variar beta
     void variarAngulo(unsigned angulo, float incremento) ;
@@ -294,7 +298,7 @@ class FuenteDireccional : public FuenteLuz{
 
 class FuentePosicional : public FuenteLuz{
   public:
-    FuentePosicional( const Tupla3f & posicion );
+    FuentePosicional( const Tupla3f & posicion, const VectorRGB & p_color);
 };
 
 //**********************************************************************
@@ -316,8 +320,9 @@ class ColFuentesLuz
    GLint max_num_fuentes ;
 } ;
 
-class ColeccionFuenteP4 : public ColeccionFL{
+class ColeccionFuentesP4 : public ColFuentesLuz{
   public:
     ColeccionFuentesP4();
-}
+};
+
 #endif

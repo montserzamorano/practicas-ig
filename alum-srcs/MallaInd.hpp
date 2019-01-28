@@ -65,13 +65,13 @@ class MallaInd : public Objeto3D
       void visualizarDE();
       void visualizarDE_MI( ContextoVis & cv );
       // visualizar con 'draw elements' con textura
-      void visualizarDE_NT();
+      void visualizarDE_NT( ContextoVis & cv );
       //DIFERIDO
       // visualizar con 'draw elements', en modo diferido (con VBOS)
       void visualizarVBOs(); //aux
       void visualizarDE_VBOs( ContextoVis & cv );
+      void visualizarVBOs_NT( ContextoVis & cv );
       // visualizar con 'draw elements', en modo diferido usando texturas
-      void visualizarVBOs_NT();
 
       // colores
       void fijarColorNodo( const Tupla3f & nuevo_color );

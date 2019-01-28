@@ -284,3 +284,24 @@ void Lampara::reiniciar(){
     parametros.at(i).reset();
   }
 }
+
+/////////////////////////// PRACTICA 4 /////////////////////////////////
+
+Lata::Lata(){
+  ponerNombre("Lata");
+  Objeto3D * lataInf = new MallaRevol("../plys/lata-pinf.ply",10,true,true,true);
+  Objeto3D * lataCue = new MallaRevol("../plys/lata-pcue.ply",10,false,true,true);
+  Objeto3D * lataSup = new MallaRevol("../plys/lata-psup.ply",10,true,true,true);
+
+  //agregar(new MaterialTapasLata());
+  //agregar(lataSup);
+  //agregar(lataInf);
+  agregar(new MaterialLata());
+  agregar(lataCue);
+}
+
+EscenaObjetosLuces::EscenaObjetosLuces(){
+  Lata * l = new Lata();
+  ColeccionFuentesP4 * luces = new ColeccionFuentesP4();
+  agregar(l);
+}

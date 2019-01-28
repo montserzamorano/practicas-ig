@@ -39,7 +39,8 @@ Tupla3f MallaRevol::rotarY(Tupla3f punto, float angulo_rotacion){
 void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, //vertices
                     const unsigned nperfiles, //numero de perfiles
                     const bool crear_tapas, //true para crear tapas
-                    const bool cerrar_malla){ //true para cerrar malla
+                    const bool cerrar_malla,
+                    const bool usar_texturas){ //true para cerrar malla
    //angulo de rotacion
    const float angulo_rot = (2*3.14159)/nperfiles;
    setVertices(perfil_original); //guardamos los puntos del perfil
@@ -104,12 +105,19 @@ void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, /
 
    }
 
+   calcular_normales();
+
+   if(usar_texturas){
+     calcularDistancias(perfil_original);
+     iniCoordenadasTextura();
+   }
+
 } //fin crear malla
 
 MallaRevol::MallaRevol( const std::string & nombre_arch,
                         const unsigned nperfiles,
                         const bool     crear_tapas,
-                        const bool     cerrar_malla  ){
+                        const bool     cerrar_malla){
    //ponemos nombre a la malla de revolucion
    nper = nperfiles;
    ponerNombre( std::string("malla por revolución del perfil en '"+ nombre_arch + "'" ));
@@ -118,16 +126,37 @@ MallaRevol::MallaRevol( const std::string & nombre_arch,
    const char *nombreArch = nombre_arch.c_str();
    ply::read_vertices(nombreArch, perfil_original);
    //Convertimos vector de float a vector de 3f
-   nvp = perfil_original.size();
    std::vector <Tupla3f> perfil;
-   for(int i=0; i<nvp; i+=3){
+   for(int i=0; i<perfil_original.size(); i+=3){
      perfil.push_back(Tupla3f(perfil_original.at(i),perfil_original.at(i+1),
               perfil_original.at(i+2)));
    }
+   nvp = perfil.size();
    //crear malla revolucion
-   crearMallaRevol(perfil, nper, crear_tapas, cerrar_malla);
-   // calcular la tabla de normales
-   calcular_normales();
+   crearMallaRevol(perfil, nper, crear_tapas, cerrar_malla, false);
+}
+
+MallaRevol::MallaRevol( const std::string & nombre_arch,
+                        const unsigned nperfiles,
+                        const bool     crear_tapas,
+                        const bool     cerrar_malla,
+                        const bool usar_texturas){
+   //ponemos nombre a la malla de revolucion
+   nper = nperfiles;
+   ponerNombre( std::string("malla por revolución del perfil en '"+ nombre_arch + "'" ));
+   //leer perfil del archivo
+   std::vector <float> perfil_original;
+   const char *nombreArch = nombre_arch.c_str();
+   ply::read_vertices(nombreArch, perfil_original);
+   //Convertimos vector de float a vector de 3f
+   std::vector <Tupla3f> perfil;
+   for(int i=0; i<perfil_original.size(); i+=3){
+     perfil.push_back(Tupla3f(perfil_original.at(i),perfil_original.at(i+1),
+              perfil_original.at(i+2)));
+   }
+   nvp = perfil.size();
+   //crear malla revolucion
+   crearMallaRevol(perfil, nper, crear_tapas, cerrar_malla, usar_texturas);
 }
 
 Cilindro::Cilindro(const int num_verts_per, //numero de vertices del perfil original (M)
@@ -141,8 +170,7 @@ Cilindro::Cilindro(const int num_verts_per, //numero de vertices del perfil orig
    for(unsigned i=0; i<num_verts_per;i++){
      perfil.push_back(Tupla3f(1.0,(1.0/num_verts_per)*i,0.0));
    }
-   crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla);
-   calcular_normales();
+   crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla, false);
 }
 Cono::Cono(
           const int num_verts_per, //numero de vertices del perfil original (M)
@@ -161,8 +189,7 @@ Cono::Cono(
                               (altura/(num_verts_per-1.0))*i,
                               0.0));
    }
-   crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla);
-   calcular_normales();
+   crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla, false);
 }
 Esfera::Esfera(
               const int num_verts_per, //numero de vertices del perfil original(M)
@@ -181,8 +208,7 @@ Esfera::Esfera(
                               radio-seccion*i,
                               0.0));
    }
-   crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla);
-   calcular_normales();
+   crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla, false);
 }
 
 ConoTruncado::ConoTruncado(float radioBase, float radioTapa,
@@ -197,8 +223,30 @@ ConoTruncado::ConoTruncado(float radioBase, float radioTapa,
                                (1.0/(num_verts_per-1.0))*i,
                                0.0));
     }
-    crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla);
-    calcular_normales();
+    crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla, false);
+  }
+
+  void MallaRevol::iniCoordenadasTextura(){
+      float si, ti;
+      //cout << "inicializando coordenadas de textura..." << endl;
+      for (unsigned i = 0; i<nper ; i++){
+        for(unsigned j=0; j<nvp; j++){
+          si = float(i)/float(nper-1); //coordenada X en el espacio de la textura
+          ti = 1-distancias.at(j)/distancias.at(nvp-1);
+          cctt.push_back(Tupla2f(si,ti));
+          //cout << si << "," << ti << endl;
+        }
+      }
+  }
+
+  void MallaRevol::calcularDistancias(const std::vector <Tupla3f> &p){
+    //cout << "inicializando distancias..." << endl;
+    if(distancias.size()==0){distancias.push_back(0.0);}
+    for(unsigned i=1; i<nvp; i++){
+      float d = 0;
+      d = distancias[i-1] + sqrt((p[i] - p[i-1]).lengthSq());
+      distancias.push_back(d);
+    }
   }
 
 // *****************************************************************************

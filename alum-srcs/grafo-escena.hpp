@@ -152,6 +152,16 @@ class Lampara : public NodoGrafoEscenaParam{
     void reiniciar();
 };
 
+class Lata : public NodoGrafoEscena{
+  public:
+    Lata();
+};
+
+class EscenaObjetosLuces : public NodoGrafoEscena{
+  public:
+    EscenaObjetosLuces();
+};
+
 #endif // GRAFO_ESCENA_HPP
 
 // *********************************************************************

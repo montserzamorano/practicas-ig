@@ -39,16 +39,8 @@ Tupla3f MallaInd::normalizar(Tupla3f tupla){
   return tupla.normalized();
 }
 
-Tupla3f MallaInd::hallarNormal(Tupla3f tupla1, Tupla3f tupla2){
-  Tupla3f resultado;
-  resultado[0] = tupla1[1]*tupla2[2]-tupla1[2]*tupla2[1];
-  resultado[1] = tupla1[0]*tupla2[2]-tupla1[2]*tupla2[0];
-  resultado[2] = tupla1[0]*tupla2[1]-tupla1[1]*tupla2[0];
-
-  return normalizar(resultado);
-}
-
 void MallaInd::calcular_normales(){
+  //cout << "inicializando tabla normales..." << endl;
   //Para las caras producto cruz de dos de sus lados y normalizando
   //Para los vertices, es la combinacion de las normales de las caras que rodean
   for(unsigned i=0; i<vertices.size();i++){
@@ -56,31 +48,26 @@ void MallaInd::calcular_normales(){
   } //inicializamos tabla de vertices porque tendremos que sumar
 
   for(unsigned i=0; i<caras.size();i++){
-    int v1 = caras.at(i)[0];
-    int v2 = caras.at(i)[1];
-    int v3 = caras.at(i)[2];
+    Tupla3f v1 = vertices[caras.at(i)[0]];
+    Tupla3f v2 = vertices[caras.at(i)[1]];
+    Tupla3f v3 = vertices[caras.at(i)[2]];
     //sacamos dos aristas
-    Tupla3f a1= Tupla3f(vertices.at(v2)[0] - vertices.at(v1)[0],
-                        vertices.at(v2)[1] - vertices.at(v1)[1],
-                        vertices.at(v2)[2] - vertices.at(v1)[2]);
+    Tupla3f a1 = v2-v1;
+    Tupla3f a2 = v3-v1;
 
-    Tupla3f a2= Tupla3f(vertices.at(v3)[0] - vertices.at(v1)[0],
-                        vertices.at(v3)[1] - vertices.at(v1)[1],
-                        vertices.at(v3)[2] - vertices.at(v1)[2]);
-
-    Tupla3f normal = hallarNormal(a1,a2);
-
+    Tupla3f normal = normalizar(a1.cross(a2));
     normales_caras.push_back(normal);
     //ahora sumamos al vertice correspondiente
-    normales_vertices.at(v1) = normales_vertices.at(v1) + normal;
-    normales_vertices.at(v2) = normales_vertices.at(v1) + normal;
-    normales_vertices.at(v3) = normales_vertices.at(v1) + normal;
+    normales_vertices.at(caras.at(i)[0]) = normales_vertices.at(caras.at(i)[0])+normal;
+    normales_vertices.at(caras.at(i)[1]) = normales_vertices.at(caras.at(i)[1])+normal;
+    normales_vertices.at(caras.at(i)[2]) = normales_vertices.at(caras.at(i)[2])+normal;
   }
 
   //normalizamos a tabla de vertices
   for(unsigned i=0; i<normales_vertices.size(); i++){
     Tupla3f t(normales_vertices.at(i));
     normales_vertices.at(i) = normalizar(t);
+    //cout << normales_vertices.at(i)[0] << "," << normales_vertices.at(i)[1] << "," << normales_vertices.at(i)[2] << endl;
   }
 
 }
@@ -110,7 +97,7 @@ void MallaInd::crearVBOs(){
   }
   //si hay tabla de texturas, crear VBO
   if( cctt.size() > 0){
-    id_vbo_cctt = VBO_Crear( GL_ARRAY_BUFFER, tam_cctt, cctt.data());
+    id_vbo_cctt = VBO_Crear( GL_ARRAY_BUFFER, 2*sizeof(float), cctt.data());
   }
 }
 
@@ -121,33 +108,24 @@ void MallaInd::setLineasPuntos(float grosorL, float grosorP){
   glPointSize(grosorP);	// grosor de punto
 }
 
-void MallaInd::visualizarDE_NT(){//visualizacion con normales y textura
-  glVertexPointer(3, GL_FLOAT, 0, vertices.data());
-  glTexCoordPointer(2, GL_FLOAT, 0, cctt.data());
-  glNormalPointer( GL_FLOAT, 0, normales_vertices.data());
-
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glEnableClientState(GL_NORMAL_ARRAY);
-  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-  glDrawElements(GL_TRIANGLES, caras.size(), GL_UNSIGNED_INT, caras.data());
-
-  glDisableClientState(GL_VERTEX_ARRAY);
-  glDisableClientState(GL_NORMAL_ARRAY);
-  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-}
-
 void MallaInd::setPolygonMode(ContextoVis & cv){
   ModosVis modovis = cv.modoVis;
-
   if(modovis == modoPuntos){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
   }
   else if(modovis == modoAlambre){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   }
   else if(modovis == modoSolido){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  }
+  else if(modovis == modoIluminacionPlano){
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glShadeModel(GL_FLAT);
+  }
+  else if(modovis == modoGoroud){
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glShadeModel(GL_SMOOTH);
   }
 }
 
@@ -176,11 +154,36 @@ void MallaInd::visualizarDE_MI( ContextoVis & cv )
     glNormalPointer( GL_FLOAT, 0, normales_vertices.data() );
   }
 
+  if(cctt.size() > 0){
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glTexCoordPointer(2, GL_FLOAT, 0, cctt.data());
+  }
+
   visualizarDE();
 
   glDisableClientState( GL_NORMAL_ARRAY );
-  glDisableClientState( GL_COLOR_ARRAY ) ;
+  glDisableClientState( GL_COLOR_ARRAY );
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
+
+void MallaInd::visualizarDE_NT( ContextoVis & cv ){
+  setPolygonMode(cv);
+
+  glVertexPointer(3,GL_FLOAT, 0, vertices.data());
+  glTexCoordPointer(2, GL_FLOAT, 0, cctt.data());
+  glNormalPointer(GL_FLOAT, 0, normales_vertices.data());
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_NORMAL_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+  glDrawElements(GL_TRIANGLES, 3*caras.size(), GL_UNSIGNED_INT, caras.data());
+
+  glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
 // ----------------------------------------------------------------------------
 //VISUALIZAR MODO DIFERIDO (vertex buffer objects)
 void MallaInd::visualizarVBOs(){
@@ -190,7 +193,7 @@ void MallaInd::visualizarVBOs(){
   glEnableClientState(GL_VERTEX_ARRAY); //usar tabla de vertices
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri);
-  glDrawElements( GL_TRIANGLES, caras.size()*3, GL_UNSIGNED_INT, nullptr);
+  glDrawElements( GL_TRIANGLES, 3*caras.size(), GL_UNSIGNED_INT, nullptr);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDisableClientState(GL_VERTEX_ARRAY); //desactivar puntero a vertices
 }
@@ -210,44 +213,47 @@ void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
     glEnableClientState( GL_COLOR_ARRAY ); //activa uso de colores de v.
   }
 
-  if(normales_vertices.size() > 0){
-    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_norm_ver); //act. VBO normales .v
-    glNormalPointer(GL_FLOAT, 0, 0); //formato y offset de normales
-    glEnableClientState( GL_NORMAL_ARRAY ); //activa uso de normales de v.
-  }
-
   visualizarVBOs();
 
-  glDisableClientState(GL_NORMAL_ARRAY);
   glDisableClientState(GL_COLOR_ARRAY );
 }
 
-void MallaInd::visualizarVBOs_NT(){
-  tam_cctt = sizeof(float)*2L*num_ver;
-
+void MallaInd::visualizarVBOs_NT( ContextoVis & cv ){
   if(!modoVBO){
     crearVBOs();
     modoVBO = true;
   }
-  //activar VBO de coordenadas
-  glBindBuffer(GL_ARRAY_BUFFER, id_vbo_norm_ver);
-  glNormalPointer(GL_FLOAT, 0, 0);
-  glEnableClientState(GL_NORMAL_ARRAY);
-  //activar VBO de coordenadas de textura
+  glBindBuffer(GL_ARRAY_BUFFER, id_vbo_norm_ver); //act. VBO normales .v
+  glNormalPointer(GL_FLOAT, 0, 0); //formato y offset de normales
+  glEnableClientState( GL_NORMAL_ARRAY ); //activa uso de normales de v.
+
   glBindBuffer(GL_ARRAY_BUFFER, id_vbo_cctt);
   glTexCoordPointer(2, GL_FLOAT, 0,0);
   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-  //visualizar
 
+  visualizarVBOs();
+
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 // -----------------------------------------------------------------------------
 void MallaInd::visualizarGL( ContextoVis & cv){
-  if(cv.modoVBO){
-    visualizarDE_VBOs(cv);
+  if(cv.modoVis==modoPuntos || cv.modoVis==modoAlambre || cv.modoVis==modoSolido){
+    if(cv.modoVBO){
+      visualizarDE_VBOs(cv);
+    }
+    else{
+      visualizarDE_MI(cv);
+    }
   }
   else{
-    visualizarDE_MI(cv);
+    if(cv.modoVBO){
+      visualizarVBOs_NT(cv);
+    }
+    else{
+      visualizarDE_NT(cv);
+    }
   }
 }
 
@@ -286,6 +292,7 @@ void MallaInd::setCaras(vector <Tupla3i> c){
 }
 
 void MallaInd::fijarColorNodo( const Tupla3f & nuevo_color ){
+  col_ver.clear();
   for(unsigned i=0; i<=vertices.size();i++){
     col_ver.push_back(nuevo_color);
   }

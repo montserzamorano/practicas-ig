@@ -191,7 +191,7 @@ class Material
 } ;
 
 ////////////////////// MATERIAL ESTANDAR /////////////////////////////////
-class MaterialEstandar : public Material {
+/*class MaterialEstandar : public Material {
   public:
     Textura * textura ; //punt. a textura (NULL si no hay)
     Tupla4f color[4] ; //0=Me; 1=Ma; 2=Md; 3=Ms
@@ -200,7 +200,7 @@ class MaterialEstandar : public Material {
     MaterialEstandar();
 
     //virtual void activar(ContextoVis & cv); //activa material
-};
+};*/
 ////////////////////// MATERIAL CONCRETO /////////////////////////////////
 //tipo de material lata con textura de coca-cola
 

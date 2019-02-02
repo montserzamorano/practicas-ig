@@ -19,6 +19,8 @@
 // *********************************************************************
 // clase: MarcoCoorVista
 
+//Espacio y orientación de la cámara u observador
+
 class MarcoCoorVista  // marco de coordenadas ({\bf cartesiano}) de la vista
 {
 
@@ -39,6 +41,8 @@ class MarcoCoorVista  // marco de coordenadas ({\bf cartesiano}) de la vista
 
 // *********************************************************************
 // clase: ViewFrustum
+
+//Delimita la región del espacio que terminará siendo visible en la pantalla
 
 class ViewFrustum
 {
@@ -71,7 +75,10 @@ class Camara
 
 // *********************************************************************
 // clase: Viewport
+//establece qué parte de la pantalla será usada para visualizar
 
+//cuando se realiza un cambio de tamaño de ventana, es bueno redimensionar
+//el viewport para adaptarlo al nuevo tamaño de ventana.
 class Viewport
 {
   public:
@@ -83,6 +90,7 @@ class Viewport
   // constructor
   Viewport() ; // crea viewport de 512 x 512 con origen en (0,0)
   Viewport( int p_org_x, int p_org_y, int p_ancho, int p_alto );
+  void fijarViewport();
 } ;
 
 // *********************************************************************

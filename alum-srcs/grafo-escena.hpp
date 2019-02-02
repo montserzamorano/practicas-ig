@@ -97,12 +97,12 @@ class NodoGrafoEscena : public Objeto3D
    Matriz4f * leerPtrMatriz( unsigned iEnt );
 
    // método para buscar un objeto con un identificador
-   //virtual bool buscarObjeto( const int ident_busc, const Matriz4f & mmodelado,
-  //                  Objeto3D ** objeto, Tupla3f & centro_wc )  ;
+   virtual bool buscarObjeto( const int ident_busc, const Matriz4f & mmodelado,
+                    Objeto3D ** objeto, Tupla3f & centro_wc )  ;
 
    // si 'centro_calculado' es 'false', recalcula el centro usando los centros
    // de los hijos (el punto medio de la caja englobante de los centros de hijos)
-   //virtual void calcularCentroOC() ;
+   virtual void calcularCentroOC() ;
 
 } ;
 
@@ -155,6 +155,11 @@ class Lampara : public NodoGrafoEscenaParam{
 class Lata : public NodoGrafoEscena{
   public:
     Lata();
+};
+
+class PeonBlanco : public NodoGrafoEscena{
+  public:
+    PeonBlanco();
 };
 
 class EscenaObjetosLuces : public NodoGrafoEscena{

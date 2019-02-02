@@ -41,7 +41,7 @@ using namespace std ;
 // *********************************************************************
 
 constexpr int
-   numPracticas      = 4 ;       // número total de prácticas
+   numPracticas      = 5 ;       // número total de prácticas
 int
    ventana_tam_x     = 1024,     // ancho inicial y actual de la ventana, en pixels
    ventana_tam_y     = 1024,     // alto inicial actual de la ventana, en pixels
@@ -306,9 +306,9 @@ void FGE_PulsarTeclaCaracter( GLFWwindow* window, unsigned int codepoint )
             case 4 :
                redibujar = P4_FGE_PulsarTeclaCaracter( tecla ) ; // true si es necesario redibujar
                break ;
-            /*case 5 :
+            case 5 :
                redibujar = P5_FGE_PulsarTeclaCaracter( tecla ) ; // true si es necesario redibujar
-               break ;*/
+               break ;
             default :
                cout << "numero de práctica incorrecto ("<< practicaActual <<")" << endl << flush ;
                break ;
@@ -681,7 +681,7 @@ void Inicializar( int argc, char *argv[] )
    P4_Inicializar(  );
 
    // inicializar la práctica 5
-   //P5_Inicializar( ventana_tam_x, ventana_tam_y );
+   P5_Inicializar( ventana_tam_x, ventana_tam_y );
 }
 
 // ---------------------------------------------------------------------

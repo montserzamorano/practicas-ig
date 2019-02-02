@@ -336,13 +336,13 @@ void Material::activar()
 
 //MATERIAL ESTANDAR
 
-MaterialEstandar::MaterialEstandar(){}
+//MaterialEstandar::MaterialEstandar(){}
 
-MaterialLata::MaterialLata() : Material("../imgs/lata-coke.jpg"){
+MaterialLata::MaterialLata() : Material("../imgs/lata-pepsi.jpg"){
   ponerNombre("material lata");
 }
 
-MaterialTapasLata::MaterialTapasLata():Material(Tupla3f(0.65, 0.65, 0.65), 0.65, 0.05, 0.2, 0.7){
+MaterialTapasLata::MaterialTapasLata():Material(Tupla3f(0.65, 0.65, 0.65), 0.6, 0.5, 0.2, 1.0){
   ponerNombre("material tapas lata");
 }
 
@@ -350,7 +350,7 @@ MaterialPeonMadera::MaterialPeonMadera():Material("../imgs/text-madera.jpg"){
   ponerNombre("material peon madera");
 }
 
-MaterialPeonBlanco::MaterialPeonBlanco():Material(1.0, 1.0, 1.0){
+MaterialPeonBlanco::MaterialPeonBlanco():Material({1.0, 1.0, 1.0}, 0.6, 0.5, 0.2, 1.0){
   ponerNombre("material peon blanco");
 }
 

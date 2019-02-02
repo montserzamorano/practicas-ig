@@ -153,19 +153,18 @@ Matriz4f * NodoGrafoEscena::leerPtrMatriz( unsigned indice ){
 // si 'centro_calculado' es 'false', recalcula el centro usando los centros
 // de los hijos (el punto medio de la caja englobante de los centros de hijos)
 
-/*void NodoGrafoEscena::calcularCentroOC()
+void NodoGrafoEscena::calcularCentroOC()
 {
 
-   // COMPLETAR: práctica 5: calcular y guardar el centro del nodo
+   //   calcular y guardar el centro del nodo
    //    en coordenadas de objeto (hay que hacerlo recursivamente)
    //   (si el centro ya ha sido calculado, no volver a hacerlo)
-   // ........
 
-}*/
+}
 // -----------------------------------------------------------------------------
 // método para buscar un objeto con un identificador y devolver un puntero al mismo
 
-/*bool NodoGrafoEscena::buscarObjeto
+bool NodoGrafoEscena::buscarObjeto
 (
    const int         ident_busc, // identificador a buscar
    const Matriz4f &  mmodelado,  // matriz de modelado
@@ -173,10 +172,16 @@ Matriz4f * NodoGrafoEscena::leerPtrMatriz( unsigned indice ){
    Tupla3f &         centro_wc   // (salida) centro del objeto en coordenadas del mundo
 )
 {
-   // COMPLETAR: práctica 5: buscar un sub-objeto con un identificador
-   // ........
+  if(!centro_calculado){
+    calcularCentroOC();
+  }
+   //buscar un sub-objeto con un identificador
+   if(identificador == ident_buscado){
 
-}*/
+     *objeto = this;
+   }
+
+}
 
 // *****************************************************************************
 // Nodo del grafo de escena, con una lista añadida de parámetros
@@ -242,17 +247,17 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   agregar(MAT_Escalado(0.5,0.5,0.5));
   Esfera * esf = new Esfera(100,100,true,true);
   agregar(esf);
-  fijarColorNodo(Tupla3f(1.0,0.8,0.0));
+  fijarColorHoja(Tupla3f(1.0,0.8,0.0));
   agregar(MAT_Escalado(2.0,2.0,2.0));
   agregar(MAT_Traslacion(0.0,-0.5,0.0));
   ConoTruncado * ct = new ConoTruncado(1.0,0.5,5,100,false,true);
   agregar(ct);
-  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
+  fijarColorHoja(Tupla3f(0.5,0.5,0.5));
   agregar(MAT_Traslacion(0.0,1.0,0.0));
   agregar(MAT_Escalado(0.5,1.0,0.5));
   Cilindro * cil = new Cilindro(5,100,true,true);
   agregar(cil);
-  fijarColorNodo(Tupla3f(0.5,0.5,0.5));
+  fijarColorHoja(Tupla3f(0.5,0.5,0.5));
   //agregamos el parámetro asociado
   string mensaje = "Rotación a los lados del cabezal del flexo.";
   p->push_back(Parametro(mensaje, entradas[1].matriz,
@@ -300,8 +305,20 @@ Lata::Lata(){
   agregar(lataCue);
 }
 
+PeonBlanco::PeonBlanco(){
+  ponerNombre("Peon");
+  Objeto3D *peon = new MallaRevol("../plys/peon.ply",10,true,false,false);
+  agregar(new MaterialPeonBlanco());
+  agregar(peon);
+}
+
 EscenaObjetosLuces::EscenaObjetosLuces(){
   Lata * l = new Lata();
+  PeonBlanco * pb = new PeonBlanco();
   ColeccionFuentesP4 * luces = new ColeccionFuentesP4();
   agregar(l);
+  agregar(MAT_Traslacion(0.5,0.3,0.5));
+  agregar(MAT_Escalado(0.2,0.2,0.2));
+  agregar(pb);
+
 }

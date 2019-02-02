@@ -39,6 +39,7 @@ const float epsilon = 1e-6 ;
 // ---------------------------------------------------------------------
 
 // foco en origen, mirando hacia Z-, vup = Y+
+//esto es, como toda la vida del señor. Mirando hacia el eje de coordenadas
 MarcoCoorVista::MarcoCoorVista()
 {
    org    = Tupla3f( 0.0, 0.0, 0.0 ) ;
@@ -151,8 +152,6 @@ void Camara::activar()
 // *********************************************************************
 // clase: Viewport
 
-
-
 // ---------------------------------------------------------------------
 // crea viewport de 512 x 512 con origen en (0,0)
 
@@ -180,5 +179,9 @@ Viewport::Viewport( int p_org_x, int p_org_y, int p_ancho, int p_alto )
 
    matrizVp    = MAT_Viewport( org_x, org_y, ancho, alto );
    matrizVpInv = MAT_Viewport_inv( org_x, org_y, ancho, alto );
+}
+
+void Viewport::fijarViewport(){
+  glViewport(org_x, org_y, ancho, alto);
 }
 // *********************************************************************

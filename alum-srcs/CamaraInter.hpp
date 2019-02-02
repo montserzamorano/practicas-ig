@@ -81,7 +81,6 @@ class CamaraInteractiva : public Camara
  void modoExaminar();                        // pasa a modo examinar (mantiene p.aten.)
  void modoPrimeraPersona() ;                 // pasa al modo primera persona
 
-
  // recalcular las matrices del marco de coorda de camara, a partir de:
  // mcv.org, mcv.eje[X/Y/Z]
  void recalcularMatrMCV();

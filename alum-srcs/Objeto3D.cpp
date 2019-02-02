@@ -14,6 +14,7 @@ using namespace std ;
 // -----------------------------------------------------------------------------
 Objeto3D::Objeto3D()
 {
+  centro_calculado = false;
    ponerIdentificador( 0 );
    ponerNombre("objeto anónimo");
    ponerCentroOC( Tupla3f( 0.0, 0.0, 0.0 ) );

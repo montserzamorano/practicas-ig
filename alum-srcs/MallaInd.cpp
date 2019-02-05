@@ -67,7 +67,8 @@ void MallaInd::calcular_normales(){
     Tupla3f a1 = v2-v1;
     Tupla3f a2 = v3-v1;
     Tupla3f v = a1.cross(a2);
-
+    cout << "a1: " << a1[0] << "," << a1[1] << "," << a1[2]  << endl;
+    cout << "a2: " << a2[0] << "," << a2[1] << "," << a2[2]  << endl;
     cout << "Producto cruzado: " << v[0] << "," << v[1] << "," << v[2]  << endl;
 
     if(v.lengthSq() == 0.0){
@@ -84,9 +85,9 @@ void MallaInd::calcular_normales(){
   }
 
   for(unsigned i=0; i<vertices.size(); i++){
-    normales_vertices.at(i) = normales_caras.at(i).normalized();
+    if(normales_vertices.at(i).lengthSq() > 0.0)
+      normales_caras.at(i).normalized();
   }
-
 }
 
 GLuint MallaInd::VBO_Crear(GLuint tipo, GLuint tamanio, GLvoid * puntero){

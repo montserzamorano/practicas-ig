@@ -313,6 +313,7 @@ class ColFuentesLuz
    ~ColFuentesLuz() ;
    void insertar( FuenteLuz * pf ) ; // inserta una nueva
    void activar( unsigned id_prog ); // activa las fuentes de luz
+   void activarTodas();
    FuenteLuz * ptrFuente( unsigned i ); // devuelve ptr a la fuente de luz numero i
 
    private:

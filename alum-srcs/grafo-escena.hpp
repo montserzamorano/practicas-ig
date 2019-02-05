@@ -96,13 +96,20 @@ class NodoGrafoEscena : public Objeto3D
    // devuelve el puntero a la matriz en la i-ésima entrada
    Matriz4f * leerPtrMatriz( unsigned iEnt );
 
-   // método para buscar un objeto con un identificador
-   virtual bool buscarObjeto( const int ident_busc, const Matriz4f & mmodelado,
+   //asigna los identificadores a todos los objetos del nodo.
+   //IMPORTANTE: modifica id
+   //Es importante el orden en el que se llama. El último que se tiene que
+   //llamar es la escena completa
+   void setIdentificadores(int id);
+
+   // método para buscar un objeto con un identificador. Al principio virtual
+   bool buscarObjeto( const int ident_busc, const Matriz4f & mmodelado,
                     Objeto3D ** objeto, Tupla3f & centro_wc )  ;
 
    // si 'centro_calculado' es 'false', recalcula el centro usando los centros
    // de los hijos (el punto medio de la caja englobante de los centros de hijos)
-   virtual void calcularCentroOC() ;
+   //al principio virtual
+   void calcularCentroOC() ;
 
 } ;
 
@@ -160,6 +167,11 @@ class Lata : public NodoGrafoEscena{
 class PeonBlanco : public NodoGrafoEscena{
   public:
     PeonBlanco();
+};
+
+class PeonMadera : public NodoGrafoEscena{
+  public:
+    PeonMadera();
 };
 
 class EscenaObjetosLuces : public NodoGrafoEscena{

@@ -184,17 +184,13 @@ Material::Material( const std::string & nombreArchivoJPG ){
    tex            = new Textura( nombreArchivoJPG ) ;
    coloresCero();
 
-   del.emision   = VectorRGB(0.0,0.0,0.0,1.0);
    del.ambiente  = VectorRGB( 0.0, 0.0, 0.0, 1.0);
    del.difusa    = VectorRGB( 0.5, 0.5, 0.5, 1.0 );
    del.especular = VectorRGB( 1.0, 1.0, 1.0, 1.0 );
-   del.exp_brillo = 1.0;
 
-   del.emision   = VectorRGB(0.0,0.0,0.0,1.0);
    del.ambiente  = VectorRGB( 0.0, 0.0, 0.0, 1.0);
    tra.difusa    = VectorRGB( 0.2, 0.2, 0.2, 1.0 );
    tra.especular = VectorRGB( 0.2, 0.2, 0.2, 1.0 );
-   tra.exp_brillo = 1.0;
 
    ponerNombre("material con textura de imagen sin iluminacion") ;
 }
@@ -320,6 +316,7 @@ void Material::activar()
     glMaterialfv(GL_BACK, GL_SPECULAR, tra.especular);
     glMaterialf(GL_BACK, GL_SHININESS, tra.exp_brillo);
 
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
   }
   else{
     glDisable(GL_LIGHTING);
@@ -350,7 +347,7 @@ MaterialPeonMadera::MaterialPeonMadera():Material("../imgs/text-madera.jpg"){
   ponerNombre("material peon madera");
 }
 
-MaterialPeonBlanco::MaterialPeonBlanco():Material({1.0, 1.0, 1.0}, 0.6, 0.5, 0.2, 1.0){
+MaterialPeonBlanco::MaterialPeonBlanco():Material(0.9,0.9,0.9){
   ponerNombre("material peon blanco");
 }
 
@@ -485,15 +482,24 @@ void ColFuentesLuz::activar( unsigned id_prog )
    glEnable(GL_LIGHTING);
    glEnable(GL_NORMALIZE);
 
-   float m = std::min((int) vpf.size(),max_num_fuentes);
+   if(id_prog < vpf.size())
+     vpf[id_prog]->activar();
+}
 
-   for(unsigned i=0; i<m; i++){
-     vpf[i]->activar();
-   }
+void ColFuentesLuz::activarTodas(){
+  glEnable(GL_LIGHTING);
+  glEnable(GL_NORMALIZE);
 
-   for(unsigned i=max_num_fuentes; i<vpf.size(); i++){
-     glDisable(GL_LIGHT0+i);
-   }
+  float m = std::min((int) vpf.size(),max_num_fuentes);
+
+  for(unsigned i=0; i<m; i++){
+    vpf[i]->activar();
+  }
+
+  for(unsigned i=max_num_fuentes; i<vpf.size(); i++){
+    glDisable(GL_LIGHT0+i);
+  }
+
 }
 //----------------------------------------------------------------------
 FuenteLuz * ColFuentesLuz::ptrFuente( unsigned i )
@@ -514,5 +520,7 @@ ColFuentesLuz::~ColFuentesLuz()
 
 ColeccionFuentesP4::ColeccionFuentesP4(){
   const VectorRGB fuenteRoja = {1.0,0.0,0.0,1.0};
-  insertar(new FuentePosicional({1.0,2.0,1.0},fuenteRoja));
+  const VectorRGB fuenteBlanca = {1.0,1.0,1.0,1.0};
+  insertar(new FuenteDireccional(5.0,20.0,fuenteRoja));
+  insertar(new FuenteDireccional(5.0,20.0,fuenteBlanca));
 }

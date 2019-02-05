@@ -80,7 +80,8 @@ void P5_DibujarObjetos( ContextoVis & cv )
 
    // activar las fuentes de luz y visualizar la escena
    //      (se supone que la camara actual ya está activada)
-   luces->activar(0);
+   glEnable(GL_LIGHTING);
+  luces->activarTodas();
    if(objetoActivo5!=nullptr){
      objetoActivo5->visualizarGL(cv);
    }

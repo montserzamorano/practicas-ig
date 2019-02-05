@@ -107,7 +107,7 @@ void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, /
 
    calcular_normales();
 
-   if(usar_texturas){
+   if(usar_texturas && !cerrar_malla){
      calcularDistancias(perfil_original);
      iniCoordenadasTextura();
    }
@@ -231,10 +231,10 @@ ConoTruncado::ConoTruncado(float radioBase, float radioTapa,
       //cout << "inicializando coordenadas de textura..." << endl;
       for (unsigned i = 0; i<nper ; i++){
         for(unsigned j=0; j<nvp; j++){
-          si = float(i)/float(nper-1); //coordenada X en el espacio de la textura
+          si = (float)i/(float)(nper-1); //coordenada X en el espacio de la textura
           ti = 1-distancias.at(j)/distancias.at(nvp-1);
           cctt.push_back(Tupla2f(si,ti));
-          //cout << si << "," << ti << endl;
+          //cout << ": "<< si << "," << ti << endl;
         }
       }
   }
@@ -244,7 +244,7 @@ ConoTruncado::ConoTruncado(float radioBase, float radioTapa,
     if(distancias.size()==0){distancias.push_back(0.0);}
     for(unsigned i=1; i<nvp; i++){
       float d = 0;
-      d = distancias[i-1] + sqrt((p[i] - p[i-1]).lengthSq());
+      d = distancias[i-1] + sqrt((p.at(i) - p.at(i-1)).lengthSq());
       distancias.push_back(d);
     }
   }

@@ -17,7 +17,9 @@ using namespace std ;
 
 static Objeto3D* objetoActivo4 = nullptr ;
 static float anguloActual = 0.0 ;
-
+static ColeccionFuentesP4 * luces = nullptr;
+static float incremento = 1.0;
+FuenteDireccional *dir;
 
 // ---------------------------------------------------------------------
 // Función para implementar en la práctica 4 para inicialización.
@@ -29,6 +31,8 @@ void P4_Inicializar(  )
    cout << "Creando objetos de la práctica 4 .... " << flush ;
 
    objetoActivo4 = new EscenaObjetosLuces();
+   luces = new ColeccionFuentesP4();
+   dir = (FuenteDireccional *)luces->ptrFuente(0);
 
    cout << "hecho." << endl << flush ;
 }
@@ -60,22 +64,11 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
 
       case '>' :
          cout << "Aumentar el ángulo activo." << endl;
-         if(anguloActual==0){ //si alpha
-           //objetoActivo4->aumentarAlpha();
-         }
-         else{ //si beta
-           //objetoActivo4->aumentarBeta();
-         }
-         break ;
+          dir->variarAngulo(anguloActual,incremento);
 
       case '<' :
          cout << "Decrementar el ángulo activo." << endl;
-         if(anguloActual==0){ //si alpha
-           //objetoActivo4->decrementarAlpha();
-         }
-         else{ //si beta
-           //objetoActivo4->decrementarBeta();
-         }
+         dir->variarAngulo(anguloActual, incremento);
          break ;
       default :
          break ;
@@ -92,6 +85,7 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
 void P4_DibujarObjetos( ContextoVis & cv )
 {
   glEnable(GL_LIGHTING);
+  luces->activarTodas();
   objetoActivo4->visualizarGL(cv);
   glDisable(GL_LIGHTING);
 }

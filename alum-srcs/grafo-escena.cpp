@@ -172,15 +172,35 @@ bool NodoGrafoEscena::buscarObjeto
    Tupla3f &         centro_wc   // (salida) centro del objeto en coordenadas del mundo
 )
 {
+  bool salida = false;
   if(!centro_calculado){
     calcularCentroOC();
   }
    //buscar un sub-objeto con un identificador
-   if(identificador == ident_buscado){
-
+   if(leerIdentificador() == ident_busc){
+     centro_wc = mmodelado*leerCentroOC();
      *objeto = this;
+     salida = true;
    }
+   else{ //buscar en los hijos
+     bool encontrado;
 
+
+
+     salida = encontrado;
+   }
+   return salida;
+
+}
+
+void NodoGrafoEscena::setIdentificadores(int id){
+  ponerIdentificador(id);
+  id++;
+  for(unsigned i=0; i<entradas.size(); i++){
+    if((entradas.at(i)).tipo == TipoEntNGE::objeto){
+      (entradas.at(i)).objeto -> ponerIdentificador(id);
+    }
+  }
 }
 
 // *****************************************************************************
@@ -219,6 +239,10 @@ Pelota::Pelota(vector <Parametro> *p){
               [=](float v){return MAT_Traslacion(0.0,v,0.0);},
               true, 0.0, 0.5, 0.1));
   fijarColorNodo(Tupla3f(0.5,0.18,0.18));
+
+  ponerIdentificador(-1);
+  int ident = 1;
+  esf->ponerIdentificador(ident);
 }
 
 Base::Base(vector <Parametro> *p){
@@ -226,6 +250,10 @@ Base::Base(vector <Parametro> *p){
   Cilindro * cil = new Cilindro(5,100,true,true);
   agregar(cil);
   fijarColorNodo(Tupla3f(0.5,0.5,0.5));
+
+  ponerIdentificador(-1);
+  int ident = 1;
+  cil->ponerIdentificador(ident);
 }
 
 Barra::Barra(vector <Parametro> *p){
@@ -234,6 +262,10 @@ Barra::Barra(vector <Parametro> *p){
   Cilindro * cil = new Cilindro(5,100,true,true);
   agregar(cil);
   fijarColorNodo(Tupla3f(0.5,0.5,0.5));
+
+  ponerIdentificador(-1);
+  int ident = 1;
+  cil->ponerIdentificador(ident);
 }
 
 LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
@@ -271,6 +303,12 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   p->push_back(Parametro(mensaje3, entradas[0].matriz,
                 [=](float v){return MAT_Traslacion(v,0.0,0.0);},
                 true, 0.0, 0.15, 0.03));
+
+  ponerIdentificador(-1);
+  int ident = 1;
+  esf->ponerIdentificador(ident);
+  ct->ponerIdentificador(ident+1);
+  cil->ponerIdentificador(ident+2);
 }
 
 Lampara::Lampara(){
@@ -282,6 +320,13 @@ Lampara::Lampara(){
   agregar(ls);
   agregar(barra);
   agregar(base);
+
+  ponerIdentificador(-1); //la lampara es el nodo padre asi que le asignamos -1
+  int ident = 1;
+  base->setIdentificadores(ident);
+  barra->setIdentificadores(ident);
+  ls->setIdentificadores(ident);
+  pelota->setIdentificadores(ident);
 }
 
 void Lampara::reiniciar(){
@@ -298,27 +343,47 @@ Lata::Lata(){
   Objeto3D * lataCue = new MallaRevol("../plys/lata-pcue.ply",10,false,true,true);
   Objeto3D * lataSup = new MallaRevol("../plys/lata-psup.ply",10,true,true,true);
 
-  //agregar(new MaterialTapasLata());
+  agregar(new MaterialTapasLata());
   //agregar(lataSup);
   //agregar(lataInf);
   agregar(new MaterialLata());
   agregar(lataCue);
+
+  ponerIdentificador(-1); //la lampara es el nodo padre asi que le asignamos -1
+  int ident = 1;
+  //lataInf->ponerIdentificador(ident);
+  lataCue->ponerIdentificador(ident+1);
+  //lataSup->ponerIdentificador(ident+2);
 }
 
 PeonBlanco::PeonBlanco(){
-  ponerNombre("Peon");
+  ponerNombre("Peon blanco");
+  ponerIdentificador(-1);
   Objeto3D *peon = new MallaRevol("../plys/peon.ply",10,true,false,false);
   agregar(new MaterialPeonBlanco());
+  agregar(peon);
+}
+
+PeonMadera::PeonMadera(){
+  ponerNombre("Peon madera");
+  ponerIdentificador(-1);
+  Objeto3D *peon = new MallaRevol("../plys/peon.ply",10,true,false,false);
+  agregar(new MaterialPeonMadera());
   agregar(peon);
 }
 
 EscenaObjetosLuces::EscenaObjetosLuces(){
   Lata * l = new Lata();
   PeonBlanco * pb = new PeonBlanco();
-  ColeccionFuentesP4 * luces = new ColeccionFuentesP4();
+  PeonMadera * pm = new PeonMadera();
+
   agregar(l);
   agregar(MAT_Traslacion(0.5,0.3,0.5));
   agregar(MAT_Escalado(0.2,0.2,0.2));
   agregar(pb);
 
+  ponerIdentificador(-1);
+  int ident = 1;
+  l->setIdentificadores(ident);
+  pb->setIdentificadores(ident);
 }

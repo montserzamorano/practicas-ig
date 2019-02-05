@@ -46,7 +46,6 @@ class MallaInd : public Objeto3D
       unsigned num_ver; //vertices.size()
       unsigned tam_cctt;
 
-
       // calculo de las normales de esta malla
       Tupla3f normalizar(Tupla3f tupla);
       Tupla3f hallarNormal(Tupla3f tupla1, Tupla3f tupla2);
@@ -70,8 +69,11 @@ class MallaInd : public Objeto3D
       // visualizar con 'draw elements', en modo diferido (con VBOS)
       void visualizarVBOs(); //aux
       void visualizarDE_VBOs( ContextoVis & cv );
-      void visualizarVBOs_NT( ContextoVis & cv );
+      //void visualizarVBOs_NT( ContextoVis & cv );
+      void visualizarDE_Plano( ContextoVis & cv );
       // visualizar con 'draw elements', en modo diferido usando texturas
+      //void visualizarBEAtrTri();
+      //void visualizarBEAtrVer();
 
       // colores
       void fijarColorNodo( const Tupla3f & nuevo_color );

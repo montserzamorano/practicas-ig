@@ -46,7 +46,7 @@ class MallaRevol : public MallaInd
       void iniCoordenadasTextura();
    public:
       // crea una malla de revolucion
-      Tupla3f rotarY(Tupla3f punto, float angulo_rotacion);
+      vector <Tupla3f> rotarY(vector <Tupla3f> perfil, Matriz4f & mrot);
       MallaRevol( const string & nombre_arch,
                   const unsigned nperfiles,
                   const bool     crear_tapas,

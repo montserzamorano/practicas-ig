@@ -232,7 +232,8 @@ Pelota::Pelota(vector <Parametro> *p){
   agregar(MAT_Rotacion(0.0,0.0,1.0,0.0));
   agregar(MAT_Traslacion(-2.5,1.0,0.0));
   agregar(MAT_Escalado(0.5,0.5,0.5));
-  Esfera * esf = new Esfera(100,100,true,true);
+  Esfera * esf = new Esfera(100,100,false,false);
+  agregar(new MaterialPelota());
   agregar(esf);
   string mensaje = "Movimiento de la pelota: Botar.";
   p->push_back(Parametro(mensaje, entradas[0].matriz,
@@ -248,6 +249,7 @@ Pelota::Pelota(vector <Parametro> *p){
 Base::Base(vector <Parametro> *p){
   agregar(MAT_Escalado(1.5,0.5,1.5));
   Cilindro * cil = new Cilindro(5,100,true,true);
+  agregar(new MaterialFlexo());
   agregar(cil);
   fijarColorNodo(Tupla3f(0.5,0.5,0.5));
 
@@ -260,6 +262,7 @@ Barra::Barra(vector <Parametro> *p){
   agregar(MAT_Traslacion(0.0,0.4,0.0));
   agregar(MAT_Escalado(0.2,3.0,0.2));
   Cilindro * cil = new Cilindro(5,100,true,true);
+  agregar(new MaterialFlexo());
   agregar(cil);
   fijarColorNodo(Tupla3f(0.5,0.5,0.5));
 
@@ -278,16 +281,19 @@ LamparaSuperior::LamparaSuperior(vector <Parametro> *p){
   agregar(MAT_Rotacion(-90.0,0.0,0.0,1.0));
   agregar(MAT_Escalado(0.5,0.5,0.5));
   Esfera * esf = new Esfera(100,100,true,true);
+  agregar(new MaterialBombilla());
   agregar(esf);
   fijarColorHoja(Tupla3f(1.0,0.8,0.0));
   agregar(MAT_Escalado(2.0,2.0,2.0));
   agregar(MAT_Traslacion(0.0,-0.5,0.0));
   ConoTruncado * ct = new ConoTruncado(1.0,0.5,5,100,false,true);
+  agregar(new MaterialFlexo());
   agregar(ct);
   fijarColorHoja(Tupla3f(0.5,0.5,0.5));
   agregar(MAT_Traslacion(0.0,1.0,0.0));
   agregar(MAT_Escalado(0.5,1.0,0.5));
   Cilindro * cil = new Cilindro(5,100,true,true);
+  agregar(new MaterialFlexo());
   agregar(cil);
   fijarColorHoja(Tupla3f(0.5,0.5,0.5));
   //agregamos el parámetro asociado
@@ -339,27 +345,30 @@ void Lampara::reiniciar(){
 
 Lata::Lata(){
   ponerNombre("Lata");
-  Objeto3D * lataInf = new MallaRevol("../plys/lata-pinf.ply",10,true,true,true);
-  Objeto3D * lataCue = new MallaRevol("../plys/lata-pcue.ply",10,false,true,true);
-  Objeto3D * lataSup = new MallaRevol("../plys/lata-psup.ply",10,true,true,true);
+  Objeto3D * lataInf = new MallaRevol("../plys/lata-pinf.ply",100,true,true,true);
+  Objeto3D * lataCue = new MallaRevol("../plys/lata-pcue.ply",100,false,true,true);
+  Objeto3D * lataSup = new MallaRevol("../plys/lata-psup.ply",100,true,true,true);
 
   agregar(new MaterialTapasLata());
-  //agregar(lataSup);
-  //agregar(lataInf);
+  agregar(lataSup);
+  agregar(lataInf);
   agregar(new MaterialLata());
   agregar(lataCue);
 
   ponerIdentificador(-1); //la lampara es el nodo padre asi que le asignamos -1
   int ident = 1;
-  //lataInf->ponerIdentificador(ident);
+  lataInf->ponerIdentificador(ident);
   lataCue->ponerIdentificador(ident+1);
-  //lataSup->ponerIdentificador(ident+2);
+  lataSup->ponerIdentificador(ident+2);
 }
 
 PeonBlanco::PeonBlanco(){
   ponerNombre("Peon blanco");
   ponerIdentificador(-1);
-  Objeto3D *peon = new MallaRevol("../plys/peon.ply",10,true,false,false);
+  Objeto3D *peon = new MallaRevol("../plys/peon.ply",1000,true,true,false);
+
+  agregar(MAT_Traslacion(-0.5,0.28,0.7));
+  agregar(MAT_Escalado(0.2,0.2,0.2));
   agregar(new MaterialPeonBlanco());
   agregar(peon);
 }
@@ -367,8 +376,22 @@ PeonBlanco::PeonBlanco(){
 PeonMadera::PeonMadera(){
   ponerNombre("Peon madera");
   ponerIdentificador(-1);
-  Objeto3D *peon = new MallaRevol("../plys/peon.ply",10,true,false,false);
+  Objeto3D *peon = new MallaRevol("../plys/peon.ply",1000,true,true,false);
+
+  agregar(MAT_Traslacion(0.0,0.28,0.7));
+  agregar(MAT_Escalado(0.2,0.2,0.2));
   agregar(new MaterialPeonMadera());
+  agregar(peon);
+}
+
+PeonNegro::PeonNegro(){
+  ponerNombre("Peon negro");
+  ponerIdentificador(-1);
+  Objeto3D *peon = new MallaRevol("../plys/peon.ply",1000,true,true,false);
+
+  agregar(MAT_Traslacion(0.5,0.28,0.7));
+  agregar(MAT_Escalado(0.2,0.2,0.2));
+  agregar(new MaterialPeonNegro());
   agregar(peon);
 }
 
@@ -376,14 +399,15 @@ EscenaObjetosLuces::EscenaObjetosLuces(){
   Lata * l = new Lata();
   PeonBlanco * pb = new PeonBlanco();
   PeonMadera * pm = new PeonMadera();
+  PeonNegro *pn = new PeonNegro();
 
   agregar(l);
-  agregar(MAT_Traslacion(0.5,0.3,0.5));
-  agregar(MAT_Escalado(0.2,0.2,0.2));
   agregar(pb);
+  agregar(pn);
+  agregar(pm);
 
   ponerIdentificador(-1);
   int ident = 1;
   l->setIdentificadores(ident);
-  pb->setIdentificadores(ident);
+  pm->setIdentificadores(ident);
 }

@@ -20,20 +20,13 @@ MallaRevol::MallaRevol(){}
 
 //funcion que nos da el punto que resulta de rotar el punto alrededor del eje Y
 //un angulo angulo_rot
-Tupla3f MallaRevol::rotarY(Tupla3f punto, float angulo_rotacion){
-  vector <vector <float> > matriz_rot = {{cos(angulo_rotacion), 0, sin(angulo_rotacion)},
-                                          {0,1,0},
-                                          {-sin(angulo_rotacion),0,cos(angulo_rotacion)}};
-  //multiplicar punto por angulo rotacion
-  Tupla3f resultado;
-  for(int i=0; i<3;i++){//filas
-    float suma = 0.0;
-    for(int j=0; j<3;j++){//columnas
-      suma+=(matriz_rot.at(i)).at(j)*(punto[j]);
-    }
-    resultado[i]=suma;
+
+vector <Tupla3f> MallaRevol::rotarY(vector <Tupla3f> perfil, Matriz4f & mrot){
+  vector <Tupla3f> sigPerfil;
+  for(int i=0; i<perfil.size(); i++){
+    sigPerfil.push_back(mrot*perfil.at(i));
   }
-  return resultado;
+  return sigPerfil;
 }
 
 void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, //vertices
@@ -41,32 +34,32 @@ void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, /
                     const bool crear_tapas, //true para crear tapas
                     const bool cerrar_malla,
                     const bool usar_texturas){ //true para cerrar malla
-   //angulo de rotacion
-   const float angulo_rot = (2*3.14159)/nperfiles;
-   setVertices(perfil_original); //guardamos los puntos del perfil
-   int puntosPerfil = perfil_original.size();
+   //angulo y matriz de rotacion
+   const float angulo_rot = 360.0/nperfiles; //si usamos mat_rot tienen que ser grados
+   Matriz4f mrot = MAT_Rotacion(angulo_rot, 0.0,0.1,0.0);
+   //guardamos los puntos del perfil
+   setVertices(perfil_original);
 
    //en primer lugar vamos a meter todos los vertices y despues construiremos
    //las caras.
-
-   for(unsigned i=1; i<nperfiles; i++){
-     for(unsigned j=0; j<puntosPerfil; j++){
-       Tupla3f nuevoPunto(rotarY(vertices.at(j), angulo_rot*(i)));
-       //introducimos el nuevo vertice de forma consecutiva
-       vertices.push_back(nuevoPunto);
+   vector <Tupla3f> siguientePerfil = perfil_original;
+   for(unsigned i=1; i<nper; i++){
+     siguientePerfil = rotarY(siguientePerfil,mrot);
+     for(int j=0; j<siguientePerfil.size(); j++){
+       vertices.push_back(siguientePerfil.at(j));
      }
    }
    //ahora construimos las caras
    if(!cerrar_malla){ //usamos modulos
      //volvemos a añadir el primer perfil
-     for(int i=0; i<puntosPerfil; i++){
+     for(int i=0; i<nvp; i++){
        vertices.push_back(vertices.at(i));
      }
-     for(int i=0; i<nperfiles; i++){
-       for(int j=0; j<puntosPerfil-1; j++){
+     for(int i=0; i<nper; i++){
+       for(int j=0; j<nvp-1; j++){
          //se guardan los vertices en el sentido contrario a las agujas del reloj
-         Tupla3i caraA(i*puntosPerfil+j,(i+1)*puntosPerfil+j,i*puntosPerfil+j+1);
-         Tupla3i caraB((i+1)*puntosPerfil+j,(i+1)*puntosPerfil+j+1,i*puntosPerfil+j+1);
+         Tupla3i caraA(i*nvp+j,(i+1)*nvp+j,i*nvp+j+1);
+         Tupla3i caraB((i+1)*nvp+j,(i+1)*nvp+j+1,i*nvp+j+1);
          //introducimos el nuevo vertice de forma consecutiva
          caras.push_back(caraA);
          caras.push_back(caraB);
@@ -74,11 +67,11 @@ void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, /
      }
    }
    else{
-     for(unsigned i=0; i<nperfiles; i++){
-       for(unsigned j=0; j<puntosPerfil-1; j++){
+     for(unsigned i=0; i<nper; i++){
+       for(unsigned j=0; j<nvp-1; j++){
          //se guardan los vertices en el sentido contrario a las agujas del reloj
-         Tupla3i caraA(i*puntosPerfil+j,((i+1)%nperfiles)*puntosPerfil+j,i*puntosPerfil+j+1);
-         Tupla3i caraB(((i+1)%nperfiles)*puntosPerfil+j,((i+1)%nperfiles)*puntosPerfil+j+1,i*puntosPerfil+j+1);
+         Tupla3i caraA(i*nvp+j,((i+1)%nper)*nvp+j,i*nvp+j+1);
+         Tupla3i caraB(((i+1)%nper)*nvp+j,((i+1)%nper)*nvp+j+1,i*nvp+j+1);
          //introducimos el nuevo vertice de forma consecutiva
          caras.push_back(caraA);
          caras.push_back(caraB);
@@ -90,16 +83,16 @@ void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, /
    if(crear_tapas){
      //guardamos los puntos para las tapas
      Tupla3f tapa1(0.0,vertices.at(0)[1],0.0);
-     Tupla3f tapa2(0.0,vertices.at(puntosPerfil-1)[1],0.0);
+     Tupla3f tapa2(0.0,vertices.at(nvp-1)[1],0.0);
 
      vertices.push_back(tapa1);
      vertices.push_back(tapa2);
      //tapa superior
-     for(unsigned i=0; i<nperfiles-1; i++){
-       Tupla3i nuevaCaraSup(vertices.size()-2,(i+1)*puntosPerfil,i*puntosPerfil);
+     for(unsigned i=0; i<nperfiles; i++){
+       Tupla3i nuevaCaraSup(vertices.size()-2,((i+1)%nper)*nvp,(i%nper)*nvp);
        caras.push_back(nuevaCaraSup);
-       Tupla3i nuevaCaraInf(vertices.size()-1,(i+1)*puntosPerfil+(puntosPerfil-1),
-                            i*puntosPerfil+(puntosPerfil-1));
+       Tupla3i nuevaCaraInf(vertices.size()-1,((i+1)%nper)*nvp+(nvp-1),
+                            (i%nper)*nvp+(nvp-1));
        caras.push_back(nuevaCaraInf);
      }
 
@@ -107,7 +100,7 @@ void MallaRevol::crearMallaRevol(const std::vector <Tupla3f> &perfil_original, /
 
    calcular_normales();
 
-   if(usar_texturas && !cerrar_malla){
+   if(usar_texturas & !crear_tapas){
      calcularDistancias(perfil_original);
      iniCoordenadasTextura();
    }
@@ -177,7 +170,7 @@ Cono::Cono(
           const unsigned nperfiles, //numero de perfiles (N)
           const bool crear_tapas, //true para crear tapas
           const bool cerrar_malla){ //true para cerrar la malla
-    setnper(nperfiles);
+   setnper(nperfiles);
    setnvp(num_verts_per);
    ponerNombre( std::string("malla por revolución del cono" ));
    float radio = 1.0;
@@ -199,14 +192,13 @@ Esfera::Esfera(
 
    setnper(nperfiles);
    setnvp(num_verts_per);
-   ponerNombre( std::string("malla por revolución del esfera" ));
+   ponerNombre( std::string("malla por revolución de la esfera" ));
    std::vector <Tupla3f> perfil;
    float radio = 1.0;
    float seccion = (radio*2.0)/(num_verts_per-1.0);
    for(unsigned i=0; i<num_verts_per;i++){
-     perfil.push_back(Tupla3f(sqrt(radio*radio-(radio-seccion*i)*(radio-seccion*i)),
-                              radio-seccion*i,
-                              0.0));
+     float y = radio-seccion*i;
+     perfil.push_back(Tupla3f(sqrt(radio*radio-y*y), y ,0.0));
    }
    crearMallaRevol(perfil,nperfiles,crear_tapas,cerrar_malla, false);
 }
@@ -228,19 +220,16 @@ ConoTruncado::ConoTruncado(float radioBase, float radioTapa,
 
   void MallaRevol::iniCoordenadasTextura(){
       float si, ti;
-      //cout << "inicializando coordenadas de textura..." << endl;
       for (unsigned i = 0; i<nper ; i++){
         for(unsigned j=0; j<nvp; j++){
           si = (float)i/(float)(nper-1); //coordenada X en el espacio de la textura
           ti = 1-distancias.at(j)/distancias.at(nvp-1);
           cctt.push_back(Tupla2f(si,ti));
-          //cout << ": "<< si << "," << ti << endl;
         }
       }
   }
 
   void MallaRevol::calcularDistancias(const std::vector <Tupla3f> &p){
-    //cout << "inicializando distancias..." << endl;
     if(distancias.size()==0){distancias.push_back(0.0);}
     for(unsigned i=1; i<nvp; i++){
       float d = 0;

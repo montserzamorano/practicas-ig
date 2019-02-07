@@ -40,9 +40,11 @@ const float epsilon = 1e-6 ;
 
 // foco en origen, mirando hacia Z-, vup = Y+
 //esto es, como toda la vida del señor. Mirando hacia el eje de coordenadas
+//cambio 0.0 por 10.0 en org para que se vea
 MarcoCoorVista::MarcoCoorVista()
 {
-   org    = Tupla3f( 0.0, 0.0, 0.0 ) ;
+   //org    = Tupla3f( 0.0, 0.0, 0.0 ) ;
+   org    = Tupla3f( 0.0, 0.0, 10.0 ) ;
    eje[X] = Tupla3f( 1.0, 0.0, 0.0 ) ;
    eje[Y] = Tupla3f( 0.0, 1.0, 0.0 ) ;
    eje[Z] = Tupla3f( 0.0, 0.0, 1.0 ) ;
@@ -125,10 +127,7 @@ ViewFrustum::ViewFrustum( float hfovy_grad, float aspect, float zNear, float zFa
 // ---------------------------------------------------------------------
 // usa constructores por defecto para {\ttbf mc} y {\ttbf vf}
 
-Camara::Camara()
-{
-
-}
+Camara::Camara(){}
 
 
 // ---------------------------------------------------------------------

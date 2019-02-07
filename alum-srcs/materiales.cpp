@@ -149,7 +149,6 @@ void Textura::activar(){
     glDisable( GL_TEXTURE_GEN_S );
     glDisable( GL_TEXTURE_GEN_T );
   }
-
 }
 
 // *********************************************************************
@@ -206,15 +205,15 @@ Material::Material( Textura * text, float ka, float kd, float ks, float exp ){
    color = VectorRGB(0.0,0.0,0.0,1.0);
 
    del.emision = VectorRGB(0.0,0.0,0.0,1.0);
-   del.ambiente = ka*color;
-   del.difusa = kd*color;
-   del.especular = ks*color;
+   del.ambiente = {ka,ka,ka,1.0};
+   del.difusa = {kd,kd,kd,1.0};
+   del.especular = {ks,ks,ks,1.0};
    del.exp_brillo = exp ;
 
    tra.emision = VectorRGB(0.0,0.0,0.0,1.0);
-   tra.ambiente = ka*color;
-   tra.difusa = kd*color;
-   tra.especular = ks*color;
+   tra.ambiente = {ka,ka,ka,1.0};
+   tra.difusa = {kd,kd,kd,1.0};
+   tra.especular = {ks,ks,ks,1.0};
    tra.exp_brillo = exp ;
 
    ponerNombre("material con textura e iluminación") ;
@@ -335,26 +334,37 @@ void Material::activar()
 
 //MaterialEstandar::MaterialEstandar(){}
 
-MaterialLata::MaterialLata() : Material("../imgs/lata-pepsi.jpg"){
+MaterialLata::MaterialLata() : Material(new Textura("../imgs/lata-coke.jpg"),0.1,0.7,1.0,20.0){
   ponerNombre("material lata");
 }
 
-MaterialTapasLata::MaterialTapasLata():Material(Tupla3f(0.65, 0.65, 0.65), 0.6, 0.5, 0.2, 1.0){
+MaterialTapasLata::MaterialTapasLata():Material(Tupla3f(0.85, 0.85, 0.85),0.1,0.7,1.0,10.0){
   ponerNombre("material tapas lata");
 }
 
-MaterialPeonMadera::MaterialPeonMadera():Material("../imgs/text-madera.jpg"){
+MaterialPeonMadera::MaterialPeonMadera():Material(new TexturaXY("../imgs/text-madera.jpg"),0.5,0.4,0.5,10.0){
   ponerNombre("material peon madera");
 }
 
-MaterialPeonBlanco::MaterialPeonBlanco():Material(0.9,0.9,0.9){
+MaterialPeonBlanco::MaterialPeonBlanco():Material(Tupla3f(0.9,0.9,0.9),0.1,0.7,1.0,1.0){
   ponerNombre("material peon blanco");
 }
 
-MaterialPeonNegro::MaterialPeonNegro():Material(0.0, 0.0, 0.0){
+MaterialPeonNegro::MaterialPeonNegro():Material(Tupla3f(0.1,0.1,0.1),0.1,0.7,1.0,1.0){
   ponerNombre("material peon negro");
 }
 
+MaterialFlexo::MaterialFlexo():Material(Tupla3f(0.2, 0.2, 0.7),0.1,0.7,1.0,10.0){
+  ponerNombre("material flexo");
+}
+
+MaterialPelota::MaterialPelota():Material(new TexturaXY("../imgs/text-marmol.jpg"),0.7,0.4,1.0,10.0){
+  ponerNombre("material pelota");
+}
+
+MaterialBombilla::MaterialBombilla():Material(Tupla3f(0.9,0.9,0.7),0.7,0.7,1.0,80.0){
+  ponerNombre("material bombilla");
+}
 //**********************************************************************
 
 FuenteLuz::FuenteLuz( GLfloat p_longi_ini, GLfloat p_lati_ini, const VectorRGB & p_color )
@@ -448,9 +458,11 @@ FuenteDireccional::FuenteDireccional(float alpha_inicial, float beta_inicial, co
 void FuenteDireccional::variarAngulo(unsigned angulo, float incremento){
   if(angulo == 0){
     longi += incremento;
+    cout << "Nuevo longi: " << longi << endl;
   }
   else{
     lati += incremento;
+    cout << "Nueva lati: " << lati << endl;
   }
 }
 
@@ -463,7 +475,7 @@ FuentePosicional::FuentePosicional( const Tupla3f & posicion, const VectorRGB & 
 
 ColFuentesLuz::ColFuentesLuz()
 {
-   max_num_fuentes = -1 ;
+   max_num_fuentes = 5 ;
 }
 //----------------------------------------------------------------------
 
@@ -496,7 +508,7 @@ void ColFuentesLuz::activarTodas(){
     vpf[i]->activar();
   }
 
-  for(unsigned i=max_num_fuentes; i<vpf.size(); i++){
+ for(unsigned i=max_num_fuentes; i<vpf.size(); i++){
     glDisable(GL_LIGHT0+i);
   }
 
@@ -519,8 +531,9 @@ ColFuentesLuz::~ColFuentesLuz()
 }
 
 ColeccionFuentesP4::ColeccionFuentesP4(){
-  const VectorRGB fuenteRoja = {1.0,0.0,0.0,1.0};
   const VectorRGB fuenteBlanca = {1.0,1.0,1.0,1.0};
-  insertar(new FuenteDireccional(5.0,20.0,fuenteRoja));
-  insertar(new FuenteDireccional(5.0,20.0,fuenteBlanca));
+  const VectorRGB fuenteVerde = {0.0,1.0,0.0,1.0};
+  //insertar(new FuenteDireccional(-30.0,30.0,fuenteBlanca));
+  //insertar(new FuentePosicional(Tupla3f{10.0,9.0,5.0},fuenteBlanca));
+  insertar(new FuenteDireccional(20.0,20.0,fuenteBlanca));
 }

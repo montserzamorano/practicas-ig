@@ -12,6 +12,7 @@
 #include "practica1.hpp"
 #include "Objeto3D.hpp"
 #include "MallaInd.hpp"
+#include "Materiales.hpp"
 
 static unsigned      objetoActivo       = 0 ; // objeto activo: cubo (0), tetraedro (1), otros....
 static constexpr int numObjetos         = 2 ; // numero de objetos creados para esta práctica

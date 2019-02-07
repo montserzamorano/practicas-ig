@@ -209,7 +209,7 @@ class MaterialLata : public Material{
     MaterialLata();
 };
 
-//tipo de material: ninguno
+//tipo de material: tapas lata
 
 class MaterialTapasLata : public Material{
   public:
@@ -223,18 +223,33 @@ class MaterialPeonMadera : public Material{
     MaterialPeonMadera();
 };
 
-//tipo de material: ninguno
+//tipo de material: blanco
 
 class MaterialPeonBlanco : public Material{
   public:
     MaterialPeonBlanco();
 };
 
-//tipo de material: ninguno
+//tipo de material: negro
 
 class MaterialPeonNegro : public Material{
   public:
     MaterialPeonNegro();
+};
+
+class MaterialFlexo : public Material{
+  public:
+    MaterialFlexo();
+};
+
+class MaterialPelota : public Material{
+  public:
+    MaterialPelota();
+};
+
+class MaterialBombilla : public Material{
+  public:
+    MaterialBombilla();
 };
 
 //**********************************************************************

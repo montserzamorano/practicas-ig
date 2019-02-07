@@ -67,16 +67,8 @@ void MallaInd::calcular_normales(){
     Tupla3f a1 = v2-v1;
     Tupla3f a2 = v3-v1;
     Tupla3f v = a1.cross(a2);
-    cout << "a1: " << a1[0] << "," << a1[1] << "," << a1[2]  << endl;
-    cout << "a2: " << a2[0] << "," << a2[1] << "," << a2[2]  << endl;
-    cout << "Producto cruzado: " << v[0] << "," << v[1] << "," << v[2]  << endl;
 
-    if(v.lengthSq() == 0.0){
-      normales_caras.at(i) = v;
-    }
-    else{
-      normales_caras.at(i) = v.normalized();
-    }
+    normales_caras.at(i) = normalizar(v);
 
   //añadimos ahora a tabla de vertices
     normales_vertices[caras.at(i)[0]] = normales_vertices[caras.at(i)[0]]+normales_caras.at(i);
@@ -85,8 +77,8 @@ void MallaInd::calcular_normales(){
   }
 
   for(unsigned i=0; i<vertices.size(); i++){
-    if(normales_vertices.at(i).lengthSq() > 0.0)
-      normales_caras.at(i).normalized();
+    Tupla3f nv = normales_vertices.at(i);
+    normales_vertices.at(i) = normalizar(nv);
   }
 }
 
@@ -233,9 +225,6 @@ void MallaInd::visualizarDE_VBOs( ContextoVis & cv ){
 }
 
 void MallaInd::visualizarDE_Plano(ContextoVis & cv){
-  cout << "Objeto: "<< leerNombre() << endl;
-  cout << "Tam" << cctt.size() << endl;
-  cout << "Vers" << vertices.size() << endl;
   glBegin(GL_TRIANGLES);
   for(unsigned i=0; i<caras.size(); i++){
     glNormal3fv(normales_caras.at(i));
@@ -268,7 +257,12 @@ void MallaInd::visualizarGL( ContextoVis & cv){
     }
   }
   else{
-    visualizarDE_Plano(cv);
+    if(cv.modoVis==modoIluminacionPlano){
+      visualizarDE_Plano(cv);
+    }
+    else{
+      visualizarDE_MI(cv);
+    }
   }
 }
 
@@ -279,6 +273,7 @@ Cubo::Cubo() : MallaInd("malla cubo"){
 	 													{1,2,7},{5,6,1},{0,5,1},{3,4,7},{2,3,7}};
   setVertices(vertices);
   setCaras(caras);
+  calcular_normales();
 }
 // *****************************************************************************
 
@@ -289,6 +284,7 @@ Tetraedro::Tetraedro():MallaInd( "malla tetraedro"){
   vector <Tupla3i> caras = {{2,0,1}, {3,2,1}, {0,1,3}, {3,2,0}};
   setVertices(vertices);
   setCaras(caras);
+  calcular_normales();
 }
 // *****************************************************************************
 

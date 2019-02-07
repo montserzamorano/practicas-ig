@@ -174,6 +174,11 @@ class PeonMadera : public NodoGrafoEscena{
     PeonMadera();
 };
 
+class PeonNegro : public NodoGrafoEscena{
+  public:
+    PeonNegro();
+};
+
 class EscenaObjetosLuces : public NodoGrafoEscena{
   public:
     EscenaObjetosLuces();

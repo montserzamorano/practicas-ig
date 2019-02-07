@@ -60,15 +60,15 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
          else{
            anguloActual=0;
          }
+         cout << "Ángulo actual: " << anguloActual << endl;
          break ;
 
       case '>' :
-         cout << "Aumentar el ángulo activo." << endl;
           dir->variarAngulo(anguloActual,incremento);
-
+          //cout << "Aumentar el ángulo actual: " << anguloActual << endl;
       case '<' :
-         cout << "Decrementar el ángulo activo." << endl;
          dir->variarAngulo(anguloActual, incremento);
+         //cout << "Decrementar el ángulo actual: " << anguloActual << endl;
          break ;
       default :
          break ;

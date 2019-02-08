@@ -26,11 +26,11 @@ static ColFuentesLuz *luces = nullptr;
 
 //Camaras
 static int camActiva;
-static const int numCamaras = 2;
+static const int numCamaras = 3;
 static CamaraInteractiva * camaras[numCamaras] = {nullptr,nullptr};
 
 //Desplazamiento
-static float d;
+static float d = 5.0;
 // viewport actual (se recalcula al inicializar y al fijar las matrices)
 Viewport viewport ;
 // true si se está en modo arrastrar, false si no
@@ -49,7 +49,9 @@ void P5_Inicializar(  int vp_ancho, int vp_alto )
    // inicializar las variables de la práctica 5 (incluyendo el viewport)
    viewport = Viewport(0.0,0.0, vp_ancho, vp_alto);
    float radio = (float) vp_alto/vp_ancho;
-   camaras[0] = new CamaraInteractiva(true, radio, 0, 0, {0,0,0},true,80.0,1.8);
+   camaras[0] = new CamaraInteractiva(false, radio, 0, 0, {0.0,0.0,0.0},true, 80.0,2);
+   camaras[1] = new CamaraInteractiva(false, radio, 90, 0, {0.0,0.0,0.0}, true,80.0,2);
+   camaras[2] = new CamaraInteractiva(false, radio, 0, -90, {0.0,0.0,0.0}, true,80.0,2);
    camActiva = 0;
 
    luces = new ColeccionFuentesP4();
@@ -174,21 +176,37 @@ bool P5_FGE_PulsarTeclaEspecial(  int tecla  )
 
 void P5_ClickIzquierdo( int x, int y )
 {
-
    //  visualizar escena en modo selección y leer el color del pixel en (x,y)
-
-
    // 1. crear un 'contextovis' apropiado
-   // .....
+   ContextoVis cv;
+   cv.modoSeleccionFBO = true;
+   cv.modoVis = modoGoroud;
 
    // 2. visualizar en modo selección (sobre el backbuffer)
-   // ....
+   glClearColor(0,0,0,1); //color de fondo
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPHT_BUFFER_BIT); //limpiar pantalla
+
+   objetoActivo5->visualizarGL(cv);
 
    // 3. leer el color del pixel, si es 0 no se hace nada
-   // .....
+   unsigned id = LeerIdentEnPixel(x,y);
 
-   // 4. buscar el objeto en el grafo de escena e informar del mismo
-   // .....
+   if(id==0){
+     cout << "No se ha seleccionado nada." << endl;
+   }
+   else{// 4. buscar el objeto en el grafo de escena e informar del mismo
+     Matriz4f m = MAT_Ident();
+     Objeto3D * objBuscado = nullptr;
+     Tupla3f centroObj(0.0,0.0,0.0);
+     if(objetoActivo5->buscarObjeto(id, m, &objBuscado,centroObj)){
+       cout << "Seleccionado objeto " << objBuscado->leerNombre() << end;
+       camara[camActiva].modoExaminar(centroObj);
+     }
+     else{
+       cout << "El objeto no existe." << endl;
+     }
+   }
+
 
 }
 // ---------------------------------------------------------------------
@@ -216,7 +234,11 @@ void P5_FinModoArrastrar()
 void P5_RatonArrastradoHasta( int x, int y )
 {
    // calcular desplazamiento desde inicio de modo arrastrar, actualizar la camara (moverHV)
-
+   int desplazaX = x-xant;
+   int desplazaY = y-yant;
+   camaras[camActiva]->moverHV(desplazaX, desplazaY);
+   xant = x;
+   yant = y;
 
 }
 // ---------------------------------------------------------------------

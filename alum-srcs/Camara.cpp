@@ -44,7 +44,7 @@ const float epsilon = 1e-6 ;
 MarcoCoorVista::MarcoCoorVista()
 {
    //org    = Tupla3f( 0.0, 0.0, 0.0 ) ;
-   org    = Tupla3f( 0.0, 0.0, 10.0 ) ;
+   org    = Tupla3f( 0.0, 0.0, 0.0 ) ;
    eje[X] = Tupla3f( 1.0, 0.0, 0.0 ) ;
    eje[Y] = Tupla3f( 0.0, 1.0, 0.0 ) ;
    eje[Z] = Tupla3f( 0.0, 0.0, 1.0 ) ;

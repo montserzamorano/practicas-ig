@@ -208,7 +208,7 @@ TuplaG<T,n> TuplaG<T,n>::normalized() const
    for( unsigned i = 0 ; i < n ; i++ )
       lenSq += (*this)(i) * (*this)(i) ;
 
-   if ( ! ( lenSq >= 0.0 ) )
+   if ( ! ( lenSq > 0.0 ) )
    {  using namespace std ;
       cout << "lenSq == " << lenSq << endl << flush ;
    }

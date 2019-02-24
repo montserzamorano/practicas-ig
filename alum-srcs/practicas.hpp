@@ -19,7 +19,6 @@
 
 class ColFuentesLuz ;
 
-
 // ---------------------------------------------------------------------
 // tipo de datos enumerado para los modos de visualización:
 
@@ -29,8 +28,8 @@ typedef enum
    modoAlambre,
    modoSolido,
 
-   modoColorNodoPlano,
-   modoMateriales,
+   modoIluminacionPlano,
+   modoGoroud,
    numModosVis
 }
    ModosVis;
@@ -42,8 +41,8 @@ const std::string nombreModo[numModosVis] =
       "modoAlambre",
       "modoSolido",
 
-      "modoColorNodoPlano",
-      "modoMateriales"
+      "modoIluminacionPlano",
+      "modoGoroud"
    } ;
 
 // --------------------------------------------------------------------

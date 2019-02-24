@@ -22,6 +22,7 @@ class MallaRevol : public MallaInd
 {
    private:
 
+   vector <float> distancias;
    unsigned
       nper , // numero de perfiles
       nvp  ; // numero de vertices por perfil
@@ -35,19 +36,26 @@ class MallaRevol : public MallaInd
       void crearMallaRevol(const vector <Tupla3f> &perfil_original, //vertices
                           const unsigned nperfiles, //numero de perfiles
                           const bool crear_tapas, //true para crear tapas
-                          const bool cerrar_malla //true para cerrar la malla
+                          const bool cerrar_malla, //true para cerrar la malla
+                          const bool usar_texturas
                           );
 
-
+      void setnper(unsigned n){nper=n;}
+      void setnvp(unsigned n){nvp = n;}
+      void calcularDistancias(const std::vector <Tupla3f> &p);
+      void iniCoordenadasTextura();
    public:
       // crea una malla de revolucion
-      Tupla3f rotarY(Tupla3f punto, float angulo_rotacion);
+      vector <Tupla3f> rotarY(vector <Tupla3f> perfil, Matriz4f & mrot);
       MallaRevol( const string & nombre_arch,
                   const unsigned nperfiles,
                   const bool     crear_tapas,
-                  const bool     cerrar_malla ) ;
-      void setnper(unsigned n){nper=n;}
-      void setnvp(unsigned n){nvp = n;}
+                  const bool     cerrar_malla) ;
+      MallaRevol( const string & nombre_arch,
+                  const unsigned nperfiles,
+                  const bool     crear_tapas,
+                  const bool     cerrar_malla,
+                  const bool usar_texturas) ;
 } ;
 
 //clases mallas indexadas por revolucion de un perfil generado proceduralmente
@@ -98,6 +106,5 @@ class ConoTruncado : public MallaRevol{
       const bool cerrar_malla //true para cerrar la malla
     );
 };
-
 
 #endif

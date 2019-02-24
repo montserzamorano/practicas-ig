@@ -2,7 +2,7 @@
 // **
 // ** Informática Gráfica, curso 2018-19
 // ** Montserrat Rodríguez Zamorano
-// ** Práctica 2  (implementación)
+// ** Práctica 4  (implementación)
 // **
 // *********************************************************************
 
@@ -10,13 +10,16 @@
 #include "tuplasg.hpp"   // Tupla3f
 #include "practicas.hpp"
 #include "practica3.hpp"
+#include "grafo-escena.hpp"
 
 
 using namespace std ;
 
-// COMPLETAR: práctica 4: declaración de variables de la práctica 4 (static)
-// ....
-
+static Objeto3D* objetoActivo4 = nullptr ;
+static float anguloActual = 0.0 ;
+static ColeccionFuentesP4 * luces = nullptr;
+static float incremento = 1.0;
+FuenteDireccional *dir;
 
 // ---------------------------------------------------------------------
 // Función para implementar en la práctica 4 para inicialización.
@@ -27,8 +30,9 @@ void P4_Inicializar(  )
 {
    cout << "Creando objetos de la práctica 4 .... " << flush ;
 
-   // COMPLETAR: práctica 4: inicializar objetos de la práctica 4
-   // ....
+   objetoActivo4 = new EscenaObjetosLuces();
+   luces = new ColeccionFuentesP4();
+   dir = (FuenteDireccional *)luces->ptrFuente(0);
 
    cout << "hecho." << endl << flush ;
 }
@@ -49,21 +53,21 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
    switch ( toupper( tecla ) )
    {
       case 'G' :
-         // COMPLETAR: práctica 4: activar el siguiente ángulo (longitud o latitud)
-         // ....
-
+         // conmutar entre el angulo alpha y el angulo beta
+         if(anguloActual==0){
+           anguloActual=1;
+         }
+         else{
+           anguloActual=0;
+         }
+         cout << "Ángulo actual: " << anguloActual << endl;
          break ;
 
       case '>' :
-         // COMPLETAR: práctica 4: incrementar el ángulo activo
-         // ....
-
-         break ;
-
+          dir->variarAngulo(anguloActual,incremento);
+          break;
       case '<' :
-         // COMPLETAR: práctica 4: decrementar el ángulo activo
-         // ....
-
+         dir->variarAngulo(anguloActual, -incremento);
          break ;
       default :
          break ;
@@ -79,8 +83,8 @@ bool P4_FGE_PulsarTeclaCaracter( unsigned char tecla )
 
 void P4_DibujarObjetos( ContextoVis & cv )
 {
-   // COMPLETAR: práctica 4: visualizar objetos
-   //     (requiere activar las fuentes de luz y luego dibujar el grafo de escena)
-   // ....
-
+  glEnable(GL_LIGHTING);
+  luces->activarTodas();
+  objetoActivo4->visualizarGL(cv);
+  glDisable(GL_LIGHTING);
 }

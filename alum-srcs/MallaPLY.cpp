@@ -24,12 +24,10 @@ MallaPLY::MallaPLY( const std::string & nombre_arch )
    vector <int> caras;
    //lee un archivo ply y lo carga en vertices y caras
    //convertimos nombre_arch a cadena de caracteres para no tener problemas
-   //probar sin convertir
    const char *nombre_arch_c = nombre_arch.c_str();
    ply::read(nombre_arch_c, vertices, caras);
    setVertices(vertices);
    setCaras(caras);
-   // calcular la tabla de normales
    calcular_normales();
 }
 //guardamos los vertices en tuplas

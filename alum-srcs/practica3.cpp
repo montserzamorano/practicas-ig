@@ -2,7 +2,7 @@
 // **
 // ** Informática Gráfica, curso 2018-19
 // ** Montserrat Rodríguez Zamorano
-// ** Práctica 2  (implementación)
+// ** Práctica 3  (implementación)
 // **
 // *********************************************************************
 
@@ -22,6 +22,8 @@ unsigned gradosLibertad = 0;
 static unsigned gradoLibertadActivo = 0 ;
 bool animaciones_activadas = false;
 
+ColeccionFuentesP4 *luces;
+
 
 // ---------------------------------------------------------------------
 // Función para implementar en la práctica 1 para inicialización.
@@ -34,6 +36,7 @@ void P3_Inicializar(  )
 
    objetos3[0] = new Lampara();
    gradosLibertad = objetos3[0]->numParametros();
+   luces = new ColeccionFuentesP4();
 
    cout << "hecho." << endl << flush ;
 }
@@ -75,6 +78,7 @@ bool P3_FGE_PulsarTeclaCaracter( unsigned char tecla )
       case 'G' :
          gradoLibertadActivo = (gradoLibertadActivo+1)%gradosLibertad;
          cout << "Grado de libertad activado: " << gradoLibertadActivo << endl;
+         cout << (objetos3[0]->leerPtrParametro(gradoLibertadActivo))->leer_descripcion()<< endl;
          break ;
 
       case 'R' :
@@ -114,7 +118,10 @@ bool P3_FGE_PulsarTeclaCaracter( unsigned char tecla )
 
 void P3_DibujarObjetos( ContextoVis & cv )
 {
+  glEnable(GL_LIGHTING);
+  luces->activarTodas();
   objetos3[0]->visualizarGL(cv);
+  glDisable(GL_LIGHTING);
 }
 
 //--------------------------------------------------------------------------

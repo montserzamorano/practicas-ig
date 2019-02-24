@@ -1,6 +1,6 @@
 // *********************************************************************
 // **
-// ** Gestión de tuplas de coordenadas o colores 
+// ** Gestión de tuplas de coordenadas o colores
 // ** (implementaciones 'inline')
 // ** Copyright (C) 2014 Carlos Ureña
 // **
@@ -17,7 +17,7 @@
 // ** You should have received a copy of the GNU General Public License
 // ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // **
-// 
+//
 
 
 // *********************************************************************
@@ -30,12 +30,12 @@
 template< class T, unsigned n> inline
 TuplaG<T,n>::TuplaG()
 {
-   
-} 
+
+}
 
 // constructor usando un array C++
-template< class T, unsigned n> inline 
-TuplaG<T,n>::TuplaG( const T * org ) 
+template< class T, unsigned n> inline
+TuplaG<T,n>::TuplaG( const T * org )
 {
    for( unsigned i = 0 ; i < n ; i++ )
       (*this)[i] = org[i] ;
@@ -62,7 +62,7 @@ const T & TuplaG<T,n>::operator () (const unsigned i) const
 //----------------------------------------------------------------------
 
 template< class T, unsigned n > inline
-T & TuplaG<T,n>::operator () (const unsigned i) 
+T & TuplaG<T,n>::operator () (const unsigned i)
 {
    assert( i < n ) ;
    return coo[i] ;
@@ -71,8 +71,8 @@ T & TuplaG<T,n>::operator () (const unsigned i)
 //----------------------------------------------------------------------
 // conversion a un puntero de lectura/escritura de tipo: T* ( T* p = tupla )
 
-template< class T, unsigned n > inline 
-TuplaG<T,n>::operator  T * () 
+template< class T, unsigned n > inline
+TuplaG<T,n>::operator  T * ()
 {
    return coo ;
 }
@@ -80,15 +80,15 @@ TuplaG<T,n>::operator  T * ()
 //----------------------------------------------------------------------
 // conversion a un puntero de solo lectura de tipo T* ( const T* p = tupla )
 
-template< class T, unsigned n > inline 
-TuplaG<T,n>::operator  const T * () const 
+template< class T, unsigned n > inline
+TuplaG<T,n>::operator  const T * () const
 {
    return coo ;
 }
 
 //----------------------------------------------------------------------
 
-template< class T, unsigned n > inline 
+template< class T, unsigned n > inline
 TuplaG<T,n> TuplaG<T,n>::operator + ( const TuplaG<T,n> & der ) const
 {
    TuplaG<T,n> res ;
@@ -99,7 +99,7 @@ TuplaG<T,n> TuplaG<T,n>::operator + ( const TuplaG<T,n> & der ) const
 
 //----------------------------------------------------------------------
 
-template< class T, unsigned n > inline 
+template< class T, unsigned n > inline
 TuplaG<T,n> TuplaG<T,n>::operator - ( const TuplaG<T,n> & der ) const
 {
    TuplaG<T,n> res ;
@@ -112,19 +112,19 @@ TuplaG<T,n> TuplaG<T,n>::operator - ( const TuplaG<T,n> & der ) const
 
 // devuelve tupla negada ( v1 = -v2 )
 template< class T, unsigned n > inline
-TuplaG<T,n> TuplaG<T,n>::operator - (  ) const 
+TuplaG<T,n> TuplaG<T,n>::operator - (  ) const
 {
    TuplaG<T,n> res ;
    for( unsigned i = 0 ; i < n ; i++ )
       res[i] = -(*this)(i) ;
    return res ;
-   
+
 }
 
 //----------------------------------------------------------------------
 
 template< class T, unsigned n > inline
-TuplaG<T,n> TuplaG<T,n>::operator * ( const T & a ) const 
+TuplaG<T,n> TuplaG<T,n>::operator * ( const T & a ) const
 {
    TuplaG<T,n> res ;
    for( unsigned i = 0 ; i < n ; i++ )
@@ -135,7 +135,7 @@ TuplaG<T,n> TuplaG<T,n>::operator * ( const T & a ) const
 //----------------------------------------------------------------------
 
 template< class T, unsigned n >  inline
-TuplaG<T,n> TuplaG<T,n>::operator / ( const T & a ) const 
+TuplaG<T,n> TuplaG<T,n>::operator / ( const T & a ) const
 {
    TuplaG<T,n> res ;
    for( unsigned i = 0 ; i < n ; i++ )
@@ -146,7 +146,7 @@ TuplaG<T,n> TuplaG<T,n>::operator / ( const T & a ) const
 //----------------------------------------------------------------------
 
 template< class T, unsigned n > inline
-TuplaG<T,n> operator * ( const T & a, const TuplaG<T,n> & der )  
+TuplaG<T,n> operator * ( const T & a, const TuplaG<T,n> & der )
 {
    TuplaG<T,n> res ;
    for( unsigned i = 0 ; i < n ; i++ )
@@ -157,23 +157,23 @@ TuplaG<T,n> operator * ( const T & a, const TuplaG<T,n> & der )
 //----------------------------------------------------------------------
 
 template< class T, unsigned n > inline
-std::ostream & operator <<  ( std::ostream & os, const TuplaG<T,n> & der ) 
+std::ostream & operator <<  ( std::ostream & os, const TuplaG<T,n> & der )
 {
    os << "(" ;
    for( unsigned i = 0 ; i < n ; i++ )
    {  os << der(i) ;
-      if ( i+1 < n ) 
+      if ( i+1 < n )
          os << "," ;
    }
    os << ")" ;
-   return os ;   
+   return os ;
 }
 
 //----------------------------------------------------------------------
 
 // producto escalar (dot)  a = v1.dot(v2)
 template< class T, unsigned n > inline
-T TuplaG<T,n>::dot( const TuplaG<T,n> & v2 ) const 
+T TuplaG<T,n>::dot( const TuplaG<T,n> & v2 ) const
 {
    double res = 0.0 ;
    for( unsigned int i = 0 ; i < n ; i++ )
@@ -185,7 +185,7 @@ T TuplaG<T,n>::dot( const TuplaG<T,n> & v2 ) const
 
 // obtener longitud al cuadrado
 template< class T, unsigned n > inline
-T TuplaG<T,n>::lengthSq( ) const 
+T TuplaG<T,n>::lengthSq( ) const
 {
    return T( this->dot( *this ) ) ;
 }
@@ -194,7 +194,7 @@ T TuplaG<T,n>::lengthSq( ) const
 // operador binario para producto escalar
 
 template< class T, unsigned n > inline
-T TuplaG<T,n>::operator | ( const TuplaG & der ) const 
+T TuplaG<T,n>::operator | ( const TuplaG & der ) const
 {
    return this->dot( der ) ;
 }
@@ -202,21 +202,21 @@ T TuplaG<T,n>::operator | ( const TuplaG & der ) const
 // ---------------------------------------------------------------------
 
 template< class T, unsigned n > inline
-TuplaG<T,n> TuplaG<T,n>::normalized() const 
+TuplaG<T,n> TuplaG<T,n>::normalized() const
 {
    T lenSq = T(0.0) ;
    for( unsigned i = 0 ; i < n ; i++ )
       lenSq += (*this)(i) * (*this)(i) ;
-   
+
    if ( ! ( lenSq > 0.0 ) )
    {  using namespace std ;
       cout << "lenSq == " << lenSq << endl << flush ;
    }
-   
+
    assert( lenSq > 0.0 ) ;
-   
+
    return (*this)*(T(1.0/sqrt(double(lenSq)))) ;
-   
+
 }
 
 // *********************************************************************
@@ -229,7 +229,7 @@ TuplaG<T,n> TuplaG<T,n>::normalized() const
 
 
 template< class T > inline
-TuplaG2<T>::TuplaG2(  ) 
+TuplaG2<T>::TuplaG2(  )
 {
 
 }
@@ -246,7 +246,7 @@ TuplaG2<T>::TuplaG2( const TuplaG<T,2> & ini )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-void TuplaG2<T>::operator = ( const TuplaG<T,2> & der ) 
+void TuplaG2<T>::operator = ( const TuplaG<T,2> & der )
 {
    (*this)[0] = der(0) ;
    (*this)[1] = der(1) ;
@@ -255,7 +255,7 @@ void TuplaG2<T>::operator = ( const TuplaG<T,2> & der )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-TuplaG2<T>::TuplaG2( const T & c0, const T & c1 ) 
+TuplaG2<T>::TuplaG2( const T & c0, const T & c1 )
 {
    (*this)[0] = c0 ;
    (*this)[1] = c1 ;
@@ -270,7 +270,7 @@ TuplaG2<T>::TuplaG2( const T & c0, const T & c1 )
 
 
 template< class T > inline
-TuplaG3<T>::TuplaG3(  ) 
+TuplaG3<T>::TuplaG3(  )
 {
 
 }
@@ -288,7 +288,7 @@ TuplaG3<T>::TuplaG3( const TuplaG<T,3> & ini )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-void TuplaG3<T>::operator = ( const TuplaG<T,3> & der ) 
+void TuplaG3<T>::operator = ( const TuplaG<T,3> & der )
 {
    (*this)[0] = der(0) ;
    (*this)[1] = der(1) ;
@@ -298,7 +298,7 @@ void TuplaG3<T>::operator = ( const TuplaG<T,3> & der )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-void TuplaG3<T>::operator = ( const TuplaG<T,4> & der ) 
+void TuplaG3<T>::operator = ( const TuplaG<T,4> & der )
 {
    (*this)[0] = der(0) ;
    (*this)[1] = der(1) ;
@@ -308,7 +308,7 @@ void TuplaG3<T>::operator = ( const TuplaG<T,4> & der )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-TuplaG3<T>::TuplaG3( const T & c0, const T & c1, const T & c2 ) 
+TuplaG3<T>::TuplaG3( const T & c0, const T & c1, const T & c2 )
 {
    (*this)[0] = c0 ;
    (*this)[1] = c1 ;
@@ -319,13 +319,13 @@ TuplaG3<T>::TuplaG3( const T & c0, const T & c1, const T & c2 )
 
 
 template< class T > inline
-TuplaG3<T> TuplaG3<T>::cross( const TuplaG3<T> & v2 ) const 
+TuplaG3<T> TuplaG3<T>::cross( const TuplaG3<T> & v2 ) const
 {
    // cuidado: no hay acceso a 'coo' tal cual, mirar:
    // http://stackoverflow.com/questions/7281072/accessing-public-members-of-base-class-fails
-   
+
    return TuplaG3<T>(  (*this)(1)*v2(2) -  (*this)(2)*v2(1),
-                       (*this)(2)*v2(0) -  (*this)(0)*v2(2), 
+                       (*this)(2)*v2(0) -  (*this)(0)*v2(2),
                        (*this)(0)*v2(1) -  (*this)(1)*v2(0)
                      );
 }
@@ -340,7 +340,7 @@ TuplaG3<T> TuplaG3<T>::cross( const TuplaG3<T> & v2 ) const
 
 
 template< class T > inline
-TuplaG4<T>::TuplaG4(  ) 
+TuplaG4<T>::TuplaG4(  )
 {
 
 }
@@ -359,7 +359,7 @@ TuplaG4<T>::TuplaG4( const TuplaG<T,4> & ini )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-void TuplaG4<T>::operator = ( const TuplaG<T,4> & der ) 
+void TuplaG4<T>::operator = ( const TuplaG<T,4> & der )
 {
    (*this)[0] = der(0) ;
    (*this)[1] = der(1) ;
@@ -370,7 +370,7 @@ void TuplaG4<T>::operator = ( const TuplaG<T,4> & der )
 // ---------------------------------------------------------------------
 
 template< class T > inline
-TuplaG4<T>::TuplaG4( const T& c0, const T& c1, const T& c2, const T& c3 ) 
+TuplaG4<T>::TuplaG4( const T& c0, const T& c1, const T& c2, const T& c3 )
 {
    (*this)[0] = c0 ;
    (*this)[1] = c1 ;

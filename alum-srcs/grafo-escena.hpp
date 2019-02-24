@@ -79,6 +79,7 @@ class NodoGrafoEscena : public Objeto3D
    // visualiza usando OpenGL
    virtual void visualizarGL( ContextoVis & cv ) ;
    void fijarColorNodo( const Tupla3f & nuevo_color ) ;
+   void fijarColorHoja( const Tupla3f & nuevo_color ) ;
 
    // calcular y obtener la caja englobante
    //virtual CajaEngf cajaEnglobante() ;
@@ -95,13 +96,20 @@ class NodoGrafoEscena : public Objeto3D
    // devuelve el puntero a la matriz en la i-ésima entrada
    Matriz4f * leerPtrMatriz( unsigned iEnt );
 
-   // método para buscar un objeto con un identificador
-   //virtual bool buscarObjeto( const int ident_busc, const Matriz4f & mmodelado,
-  //                  Objeto3D ** objeto, Tupla3f & centro_wc )  ;
+   //asigna los identificadores a todos los objetos del nodo.
+   //IMPORTANTE: modifica id
+   //Es importante el orden en el que se llama. El último que se tiene que
+   //llamar es la escena completa
+   int setIdentificadores(int id);
+
+   // método para buscar un objeto con un identificador. Al principio virtual
+   bool buscarObjeto( const int ident_busc, const Matriz4f & mmodelado,
+                    Objeto3D ** objeto, Tupla3f & centro_wc )  ;
 
    // si 'centro_calculado' es 'false', recalcula el centro usando los centros
    // de los hijos (el punto medio de la caja englobante de los centros de hijos)
-   //virtual void calcularCentroOC() ;
+   //al principio virtual
+   void calcularCentroOC() ;
 
 } ;
 
@@ -149,6 +157,31 @@ class Lampara : public NodoGrafoEscenaParam{
   public:
     Lampara();
     void reiniciar();
+};
+
+class Lata : public NodoGrafoEscena{
+  public:
+    Lata();
+};
+
+class PeonBlanco : public NodoGrafoEscena{
+  public:
+    PeonBlanco();
+};
+
+class PeonMadera : public NodoGrafoEscena{
+  public:
+    PeonMadera();
+};
+
+class PeonNegro : public NodoGrafoEscena{
+  public:
+    PeonNegro();
+};
+
+class EscenaObjetosLuces : public NodoGrafoEscena{
+  public:
+    EscenaObjetosLuces();
 };
 
 #endif // GRAFO_ESCENA_HPP

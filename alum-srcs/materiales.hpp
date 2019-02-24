@@ -29,7 +29,6 @@
 #include "tuplasg.hpp"
 #include "jpg_imagen.hpp"
 
-
 // *********************************************************************
 // algunes declaraciones auxiliares importantes
 
@@ -40,8 +39,7 @@ typedef Tupla4f VectorRGB ;
 // *********************************************************************
 // clase para una pila de materiales
 
-class PilaMateriales
-{
+class PilaMateriales{
    private:
 
    Material *              actual ;
@@ -57,6 +55,8 @@ class PilaMateriales
    void pop();
 } ;
 
+#include "practicas.hpp"   // declaración de 'ContextoVis'
+
 //**********************************************************************
 // posibles modos de generacion de coords. de textura
 
@@ -66,8 +66,6 @@ typedef enum
    mgct_coords_ojo
 }
    ModoGenCT ;
-
-
 
 // *********************************************************************
 // Estructura ColoresMat
@@ -192,6 +190,68 @@ class Material
       tra ;          // reflectividades de caras traseras, si iluminacion=true
 } ;
 
+////////////////////// MATERIAL ESTANDAR /////////////////////////////////
+/*class MaterialEstandar : public Material {
+  public:
+    Textura * textura ; //punt. a textura (NULL si no hay)
+    Tupla4f color[4] ; //0=Me; 1=Ma; 2=Md; 3=Ms
+    float exponente; //exponente (e)
+
+    MaterialEstandar();
+
+    //virtual void activar(ContextoVis & cv); //activa material
+};*/
+////////////////////// MATERIAL CONCRETO /////////////////////////////////
+//tipo de material lata con textura de coca-cola
+
+class MaterialLata : public Material{
+  public:
+    MaterialLata();
+};
+
+//tipo de material: tapas lata
+
+class MaterialTapasLata : public Material{
+  public:
+    MaterialTapasLata();
+};
+
+//tipo de material peon con textura de madera
+
+class MaterialPeonMadera : public Material{
+  public:
+    MaterialPeonMadera();
+};
+
+//tipo de material: blanco
+
+class MaterialPeonBlanco : public Material{
+  public:
+    MaterialPeonBlanco();
+};
+
+//tipo de material: negro
+
+class MaterialPeonNegro : public Material{
+  public:
+    MaterialPeonNegro();
+};
+
+class MaterialFlexo : public Material{
+  public:
+    MaterialFlexo();
+};
+
+class MaterialPelota : public Material{
+  public:
+    MaterialPelota();
+};
+
+class MaterialBombilla : public Material{
+  public:
+    MaterialBombilla();
+};
+
 //**********************************************************************
 // Clase FuenteLuz
 // ---------------
@@ -211,6 +271,8 @@ class FuenteLuz
    // cambia el estado de OpenGL de forma que a partir de la llamada
    // se usará esta fuente de luz en los calculos del MIL
    // (en cada momento puede haber varias fuentes activadas)
+
+   //lo hacemos virtual porque los definiremos en las subclases
    void activar() ;
 
    // cambia los atributos de la instancia en respuesta a una pulsación
@@ -225,6 +287,8 @@ public:
       longi,      // longitud actual de la fuente direccional (en grados, entre 0 y 360)
       lati ;      // latitud actual de la fuente direccional (en grados, entre -90 y 90)
 protected:
+   Tupla4f posicion ;
+
    VectorRGB
       col_ambiente,  // color de la fuente para la componente ambiental
       col_difuso,    // color de la fuente para la componente difusa
@@ -238,6 +302,20 @@ protected:
    friend class ColFuentesLuz ;
 } ;
 
+class FuenteDireccional : public FuenteLuz{
+  public:
+    //inicializar la fuente de luz
+    FuenteDireccional(float alpha_inicial, float beta_inicial, const VectorRGB & p_color) ;
+    //cambiar angulo
+    //angulo==0->variar alpha, angulo==1->variar beta
+    void variarAngulo(unsigned angulo, float incremento) ;
+};
+
+class FuentePosicional : public FuenteLuz{
+  public:
+    FuentePosicional( const Tupla3f & posicion, const VectorRGB & p_color);
+};
+
 //**********************************************************************
 // Clase ConjuntoFuentes
 // ---------------
@@ -250,10 +328,17 @@ class ColFuentesLuz
    ~ColFuentesLuz() ;
    void insertar( FuenteLuz * pf ) ; // inserta una nueva
    void activar( unsigned id_prog ); // activa las fuentes de luz
+   void activarTodas();
    FuenteLuz * ptrFuente( unsigned i ); // devuelve ptr a la fuente de luz numero i
 
    private:
    std::vector<FuenteLuz *> vpf ; // vector de punteros a fuentes
    GLint max_num_fuentes ;
 } ;
+
+class ColeccionFuentesP4 : public ColFuentesLuz{
+  public:
+    ColeccionFuentesP4();
+};
+
 #endif
